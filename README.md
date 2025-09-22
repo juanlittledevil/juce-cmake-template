@@ -19,25 +19,28 @@ This project is designed to be a reusable template for new JUCE projects. Here's
 ### 🚀 Quick Project Setup (Automated)
 
 1. **Copy this template folder**:
+
    ```bash
    cp -r /path/to/JUCE-CMake-Template /path/to/MyNewPlugin
    cd /path/to/MyNewPlugin
    ```
 
 2. **Run the setup script**:
+
    ```bash
    ./setup-new-project.sh
    ```
-   
+
    The script will prompt you for:
    - Project name (e.g., "MyReverb")
-   - Product name (e.g., "My Reverb Plugin") 
+   - Product name (e.g., "My Reverb Plugin")
    - Company name (e.g., "MyCompany")
    - Company domain (e.g., "mycompany.com")
    - Plugin type (synth or effect)
    - MIDI input requirement
 
 3. **Build your new project**:
+
    ```bash
    ./build.sh
    ```
@@ -47,11 +50,13 @@ This project is designed to be a reusable template for new JUCE projects. Here's
 If you prefer to customize manually, here are the files you need to modify:
 
 #### 1. Main Project Configuration (`CMakeLists.txt`)
+
 ```cmake
 project(YourProjectName VERSION 1.0.0)  # Change project name
 ```
 
 #### 2. Plugin Configuration (`Source/CMakeLists.txt`)
+
 ```cmake
 juce_add_plugin(YourProjectName
     COMPANY_NAME "Your Company"
@@ -64,11 +69,14 @@ juce_add_plugin(YourProjectName
 ```
 
 #### 3. Class Names (Source Files)
+
 Replace these class names throughout the source files:
+
 - `JuceTemplateAudioProcessor` → `YourProjectAudioProcessor`
 - `JuceTemplateAudioProcessorEditor` → `YourProjectAudioProcessorEditor`
 
 #### 4. Files to Update
+
 - `Source/PluginProcessor.h` - Class declarations
 - `Source/PluginProcessor.cpp` - Class implementations  
 - `Source/PluginEditor.h` - Editor class declaration
@@ -100,13 +108,13 @@ Replace these class names throughout the source files:
 
 ### Build and Run
 
-1. **Quick Build** (recommended):
+a. **Quick Build** (recommended):
 
 ```bash
 ./build.sh
 ```
 
-2. **Manual Build**:
+b. **Manual Build**:
 
 ```bash
 mkdir build && cd build
@@ -114,7 +122,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 ```
 
-3. **Run the Standalone App**:
+c. **Run the Standalone App**:
 
 ```bash
 open "./build/Source/JuceTemplate_artefacts/Release/Standalone/Juce Template.app"
