@@ -1,5 +1,5 @@
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
+#include "../include/PluginProcessor.h"
+#include "../include/PluginEditor.h"
 
 //==============================================================================
 JuceTemplateAudioProcessor::JuceTemplateAudioProcessor()

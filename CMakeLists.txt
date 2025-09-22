@@ -18,5 +18,8 @@ CPMAddPackage(
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/JUCE
 )
 
-# Add subdirectories
-add_subdirectory(Source)
+# Add external libraries
+add_subdirectory(lib)
+
+# Add source directory
+add_subdirectory(src)

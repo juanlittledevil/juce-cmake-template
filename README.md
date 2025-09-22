@@ -11,6 +11,9 @@ A modern JUCE audio plugin template using CMake and CPM (C++ Package Manager) fo
 - C++20 standard
 - Automatic plugin installation to system directories
 - Cross-platform build system
+- Professional project structure with separated headers/implementation
+- External library management system
+- Asset management for resources (images, audio, fonts)
 
 ## Using as a Template
 
@@ -55,7 +58,7 @@ If you prefer to customize manually, here are the files you need to modify:
 project(YourProjectName VERSION 1.0.0)  # Change project name
 ```
 
-#### 2. Plugin Configuration (`Source/CMakeLists.txt`)
+#### 2. Plugin Configuration (`src/CMakeLists.txt`)
 
 ```cmake
 juce_add_plugin(YourProjectName
@@ -77,10 +80,10 @@ Replace these class names throughout the source files:
 
 #### 4. Files to Update
 
-- `Source/PluginProcessor.h` - Class declarations
-- `Source/PluginProcessor.cpp` - Class implementations  
-- `Source/PluginEditor.h` - Editor class declaration
-- `Source/PluginEditor.cpp` - Editor implementation
+- `include/PluginProcessor.h` - Processor class declaration
+- `src/PluginProcessor.cpp` - Processor implementation  
+- `include/PluginEditor.h` - Editor class declaration
+- `src/PluginEditor.cpp` - Editor implementation
 
 ### 📋 Project Naming Guidelines
 
@@ -145,16 +148,28 @@ To clean all build artifacts:
 ├── setup-new-project.sh      # New project setup script
 ├── cmake/
 │   └── CPM.cmake             # CPM package manager
-├── Source/
-│   ├── CMakeLists.txt        # Source-specific CMake config
-│   ├── PluginProcessor.h/.cpp
-│   └── PluginEditor.h/.cpp
+├── include/                   # Header files (.h)
+│   ├── PluginProcessor.h     
+│   └── PluginEditor.h        
+├── src/                      # Implementation files (.cpp) + build config
+│   ├── CMakeLists.txt        # Plugin build configuration
+│   ├── PluginProcessor.cpp   
+│   └── PluginEditor.cpp      
+├── lib/                      # External libraries
+│   ├── CMakeLists.txt        # Library dependency configuration
+│   └── README.md             # Library usage guide
+├── assets/                   # Plugin resources
+│   ├── images/               # UI graphics, logos
+│   ├── fonts/                # Custom fonts
+│   ├── audio/                # Samples, impulse responses
+│   ├── data/                 # Config files, presets
+│   └── README.md             # Asset usage guide
 └── README.md
 ```
 
 ## Configuration
 
-Edit the `Source/CMakeLists.txt` file to customize:
+Edit the `src/CMakeLists.txt` file to customize:
 
 - **Plugin Identity**:
 
@@ -210,6 +225,31 @@ Built plugins are automatically installed to:
 - **AU**: `~/Library/Audio/Plug-Ins/Components/`
 - **VST3**: `~/Library/Audio/Plug-Ins/VST3/`
 
+### Working with External Libraries
+
+Add libraries to `lib/CMakeLists.txt`:
+
+```cmake
+CPMAddPackage(
+    NAME MyLibrary
+    GITHUB_REPOSITORY user/mylibrary
+    GIT_TAG v1.0.0
+)
+target_link_libraries(YourPlugin PRIVATE MyLibrary)
+```
+
+### Asset Management
+
+Place assets in the `assets/` directory and add to `src/CMakeLists.txt`:
+
+```cmake
+juce_add_binary_data(AudioPluginData
+    SOURCES
+        ../assets/images/logo.png
+        ../assets/audio/impulse.wav)
+target_link_libraries(YourPlugin PRIVATE AudioPluginData)
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -242,9 +282,11 @@ Built plugins are automatically installed to:
 
 ## Next Steps
 
-1. Customize the plugin parameters in `PluginProcessor.cpp`
-2. Design your UI in `PluginEditor.cpp`
+1. Customize the plugin parameters in `src/PluginProcessor.cpp`
+2. Design your UI in `src/PluginEditor.cpp`
 3. Add DSP processing in the `processBlock()` method
-4. Configure plugin properties in `Source/CMakeLists.txt`
+4. Configure plugin properties in `src/CMakeLists.txt`
+5. Add external libraries in `lib/CMakeLists.txt`
+6. Include assets (images, audio) in `assets/` directory
 
 Happy coding! 🎵

@@ -88,7 +88,7 @@ echo "🚀 Updating project files..."
 sed -i '' "s/project(JuceTemplate VERSION 1.0.0)/project($PROJECT_NAME VERSION 1.0.0)/" CMakeLists.txt
 
 # Update Source/CMakeLists.txt with all the new values
-cat > Source/CMakeLists.txt << EOF
+cat > src/CMakeLists.txt << EOF
 # Source directory CMakeLists.txt
 
 # Create the plugin target
@@ -109,6 +109,12 @@ juce_add_plugin($PROJECT_NAME
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "$PRODUCT_NAME")               # The name of the final executable, which can differ from the target name
+
+# Include directories
+target_include_directories($PROJECT_NAME
+    PRIVATE
+        \${CMAKE_CURRENT_SOURCE_DIR}/../include
+        \${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
 # Add source files
 target_sources($PROJECT_NAME
@@ -133,30 +139,38 @@ target_link_libraries($PROJECT_NAME
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+# Add external libraries support
+# Include any external libraries from the lib/ directory
+file(GLOB_RECURSE EXTERNAL_LIBS "\${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.cpp")
+if(EXTERNAL_LIBS)
+    target_sources($PROJECT_NAME PRIVATE \${EXTERNAL_LIBS})
+    message(STATUS "Added external libraries: \${EXTERNAL_LIBS}")
+endif()
 EOF
 
 # Update class names in header files
 OLD_CLASS_NAME="JuceTemplateAudioProcessor"
 NEW_CLASS_NAME="${PROJECT_NAME}AudioProcessor"
 
-# Update PluginProcessor.h
-sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" Source/PluginProcessor.h
+# Update PluginProcessor.h (now in include/)
+sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" include/PluginProcessor.h
 
-# Update PluginProcessor.cpp  
-sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" Source/PluginProcessor.cpp
+# Update PluginProcessor.cpp (now in src/)
+sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" src/PluginProcessor.cpp
 
-# Update PluginEditor.h
+# Update PluginEditor.h (now in include/)
 OLD_EDITOR_CLASS="JuceTemplateAudioProcessorEditor"
 NEW_EDITOR_CLASS="${PROJECT_NAME}AudioProcessorEditor"
-sed -i '' "s/$OLD_EDITOR_CLASS/$NEW_EDITOR_CLASS/g" Source/PluginEditor.h
-sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" Source/PluginEditor.h
+sed -i '' "s/$OLD_EDITOR_CLASS/$NEW_EDITOR_CLASS/g" include/PluginEditor.h
+sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" include/PluginEditor.h
 
-# Update PluginEditor.cpp
-sed -i '' "s/$OLD_EDITOR_CLASS/$NEW_EDITOR_CLASS/g" Source/PluginEditor.cpp
-sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" Source/PluginEditor.cpp
+# Update PluginEditor.cpp (now in src/)
+sed -i '' "s/$OLD_EDITOR_CLASS/$NEW_EDITOR_CLASS/g" src/PluginEditor.cpp
+sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" src/PluginEditor.cpp
 
 # Update the Hello World message
-sed -i '' "s/Hello JUCE World!/Hello $PRODUCT_NAME!/g" Source/PluginEditor.cpp
+sed -i '' "s/Hello JUCE World!/Hello $PRODUCT_NAME!/g" src/PluginEditor.cpp
 
 echo "✅ Project setup complete!"
 echo

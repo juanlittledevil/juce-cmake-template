@@ -19,6 +19,12 @@ juce_add_plugin(JuceTemplate
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "Juce Template")               # The name of the final executable, which can differ from the target name
 
+# Include directories
+target_include_directories(JuceTemplate
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
 # Add source files
 target_sources(JuceTemplate
     PRIVATE
@@ -38,9 +44,15 @@ target_link_libraries(JuceTemplate
     PRIVATE
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
-        juce::juce_audio_processors
-        juce::juce_gui_basics
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+# Add external libraries support
+# Include any external libraries from the lib/ directory
+file(GLOB_RECURSE EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.cpp")
+if(EXTERNAL_LIBS)
+    target_sources(JuceTemplate PRIVATE ${EXTERNAL_LIBS})
+    message(STATUS "Added external libraries: ${EXTERNAL_LIBS}")
+endif()
