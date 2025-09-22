@@ -11,8 +11,10 @@ This directory is for managing external dependencies and custom libraries.
 ## Examples
 
 ### Adding a Header-Only Library
+
 For simple header-only libraries, just copy the headers here:
-```
+
+```text
 lib/
 ├── my-dsp-lib/
 │   ├── Reverb.h
@@ -21,7 +23,9 @@ lib/
 ```
 
 ### Adding via CPM
+
 For libraries available on GitHub, add to `CMakeLists.txt`:
+
 ```cmake
 CPMAddPackage(
     NAME MyLibrary
@@ -42,6 +46,7 @@ target_link_libraries(YourPlugin PRIVATE MyLibrary)
 ## Usage
 
 Once added here, libraries are automatically available in your plugin code via:
+
 ```cpp
 #include "my-dsp-lib/Reverb.h"
 ```
