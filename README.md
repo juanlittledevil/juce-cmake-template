@@ -1,5 +1,8 @@
 # JUCE CMake Template
 
+> **⚠️ NOTICE:**
+> This template has **ONLY been tested on macOS** as of September 2025. Windows and Linux support is expected, but not yet verified. If you encounter issues on other platforms, please open an issue or contribute fixes!
+
 A modern JUCE audio plugin template using CMake and CPM (C++ Package Manager) for dependency management. This template avoids Xcode project files and uses CMake tools exclusively.
 
 ## Features
