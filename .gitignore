@@ -1,0 +1,34 @@
+# Build directories
+build/
+build-*/
+
+# JUCE specific
+JUCE/
+Builds/
+
+# macOS specific
+.DS_Store
+*.xcworkspace
+*.xcodeproj
+
+# Compiled binaries
+*.app
+*.vst3
+*.au
+*.component
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.make
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
