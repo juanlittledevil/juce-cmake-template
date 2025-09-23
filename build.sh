@@ -4,7 +4,15 @@
 
 set -e  # Exit on error
 
-echo "🎵 Building JUCE Template Project..."
+# Extract project name from CMakeLists.txt
+PROJECT_NAME=$(grep "^project(" CMakeLists.txt | sed 's/project(\([^ ]*\).*/\1/' | head -1)
+
+if [ -z "$PROJECT_NAME" ]; then
+    # Fallback to directory name if project name not found
+    PROJECT_NAME=$(basename "$PWD")
+fi
+
+echo "🎵 Building $PROJECT_NAME Project..."
 
 # Create build directory if it doesn't exist
 if [ ! -d "build" ]; then
@@ -24,12 +32,27 @@ cmake --build . --config Release --parallel $(sysctl -n hw.logicalcpu)
 echo ""
 echo "✅ Build completed successfully!"
 echo ""
+
+# Find actual artifact names (they may have spaces or different naming)
+STANDALONE_APP=$(find "./src/${PROJECT_NAME}_artefacts/Release/Standalone" -name "*.app" 2>/dev/null | head -1)
+AU_PLUGIN=$(find "./src/${PROJECT_NAME}_artefacts/Release/AU" -name "*.component" 2>/dev/null | head -1)
+VST3_PLUGIN=$(find "./src/${PROJECT_NAME}_artefacts/Release/VST3" -name "*.vst3" 2>/dev/null | head -1)
+
 echo "📦 Built artifacts:"
-echo "   • Standalone App: ./build/src/JuceTemplate_artefacts/Release/Standalone/Juce Template.app"
-echo "   • AU Plugin:      ./build/src/JuceTemplate_artefacts/Release/AU/Juce Template.component"
-echo "   • VST3 Plugin:    ./build/src/JuceTemplate_artefacts/Release/VST3/Juce Template.vst3"
+if [ -n "$STANDALONE_APP" ]; then
+    echo "   • Standalone App: ./build/$STANDALONE_APP"
+fi
+if [ -n "$AU_PLUGIN" ]; then
+    echo "   • AU Plugin:      ./build/$AU_PLUGIN"
+fi
+if [ -n "$VST3_PLUGIN" ]; then
+    echo "   • VST3 Plugin:    ./build/$VST3_PLUGIN"
+fi
+
 echo ""
-echo "🚀 To run the standalone app:"
-echo "   open \"./build/src/JuceTemplate_artefacts/Release/Standalone/Juce Template.app\""
-echo ""
+if [ -n "$STANDALONE_APP" ]; then
+    echo "🚀 To run the standalone app:"
+    echo "   open \"./build/$STANDALONE_APP\""
+    echo ""
+fi
 echo "💡 Plugins have been automatically installed to your system plugin folders!"
