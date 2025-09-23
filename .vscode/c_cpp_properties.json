@@ -1,0 +1,43 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/include/**",
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/lib/**",
+                "${workspaceFolder}/tests/**",
+                "${workspaceFolder}/JUCE/modules/**",
+                "${workspaceFolder}/build/_deps/juce-src/modules/**"
+            ],
+            "defines": [
+                "JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_basics=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_devices=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_formats=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_plugin_client=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_processors=1",
+                "JUCE_MODULE_AVAILABLE_juce_audio_utils=1",
+                "JUCE_MODULE_AVAILABLE_juce_core=1",
+                "JUCE_MODULE_AVAILABLE_juce_data_structures=1",
+                "JUCE_MODULE_AVAILABLE_juce_events=1",
+                "JUCE_MODULE_AVAILABLE_juce_graphics=1",
+                "JUCE_MODULE_AVAILABLE_juce_gui_basics=1",
+                "JUCE_MODULE_AVAILABLE_juce_gui_extra=1",
+                "JUCE_WEB_BROWSER=0",
+                "JUCE_USE_CURL=0",
+                "JUCE_VST3_CAN_REPLACE_VST2=0",
+                "DEBUG=1",
+                "_DEBUG=1"
+            ],
+            "macFrameworkPath": [
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64"
+        }
+    ],
+    "version": 4
+}

@@ -17,6 +17,34 @@ A modern JUCE audio plugin template using CMake and CPM (C++ Package Manager) fo
 - Professional project structure with separated headers/implementation
 - External library management system
 - Asset management for resources (images, audio, fonts)
+- Complete testing and debugging support with VS Code integration
+
+## 🧪 Testing & Debugging
+
+This template includes comprehensive testing and debugging support:
+
+### Unit Testing
+
+- **JUCE's built-in test framework** for reliable testing
+- **Example tests** for plugin functionality
+- **Command line testing**: `./build-tests.sh`
+- **VS Code integration**: Run tests via tasks or debug them directly
+
+### Debugging in VS Code
+
+- **Full debugging support** with breakpoints and variable inspection
+- **Debug configurations** for standalone app and unit tests
+- **Task integration** for building and running
+- **IntelliSense** and code completion
+
+### Getting Started with Testing
+
+1. **Build and test**: `./build-tests.sh`
+2. **Debug standalone**: Press `F5` → "Debug Standalone App"
+3. **Debug tests**: Press `F5` → "Debug Unit Tests"
+4. **Add tests**: Create new test classes in `tests/`
+
+📖 **See [DEBUGGING.md](DEBUGGING.md) for detailed testing and debugging guide**
 
 ## Using as a Template
 

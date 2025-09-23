@@ -1,0 +1,34 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "build/": true,
+            "**/.DS_Store": true,
+            ".git": false
+        },
+        "search.exclude": {
+            "build/": true
+        },
+        "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+        "cmake.buildDirectory": "${workspaceFolder}/build",
+        "cmake.sourceDirectory": "${workspaceFolder}",
+        "cmake.generator": "Unix Makefiles",
+        "cmake.buildTask": true,
+        "cmake.debugConfig": {
+            "MIMode": "lldb"
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cpptools",
+            "ms-vscode.cmake-tools",
+            "ms-vscode.cpptools-extension-pack",
+            "twxs.cmake",
+            "llvm-vs-code-extensions.vscode-clangd"
+        ]
+    }
+}

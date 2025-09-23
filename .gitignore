@@ -24,11 +24,15 @@ cmake_install.cmake
 Makefile
 *.make
 
-# IDE files
-.vscode/
+# IDE files (keep VS Code config for template)
+.vscode/settings.json
+.vscode/ipch/
 .idea/
 *.swp
 *.swo
+
+# Test artifacts
+tests/build/
 
 # Logs
 *.log

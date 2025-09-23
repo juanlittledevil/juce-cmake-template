@@ -127,6 +127,16 @@ void JuceTemplateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    // Debug: Add some variables we can inspect in the debugger
+    static int processCallCount = 0;
+    processCallCount++;
+    
+    auto numSamples = buffer.getNumSamples();
+    auto sampleRate = getSampleRate();
+    
+    // This is a good place to set a breakpoint!
+    DBG("Processing block " << processCallCount << " with " << numSamples << " samples at " << sampleRate << " Hz");
+
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -146,7 +156,12 @@ void JuceTemplateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
+        // Debug: Let's add a simple gain effect we can debug
+        for (int sample = 0; sample < numSamples; ++sample)
+        {
+            // Apply a small gain (0.5) - good place for a breakpoint!
+            channelData[sample] *= 0.5f;
+        }
     }
 }
 

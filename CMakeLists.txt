@@ -23,3 +23,9 @@ add_subdirectory(lib)
 
 # Add source directory
 add_subdirectory(src)
+
+# Enable testing and add tests if BUILD_TESTING is ON
+include(CTest)
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()

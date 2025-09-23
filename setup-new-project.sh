@@ -172,6 +172,15 @@ sed -i '' "s/$OLD_CLASS_NAME/$NEW_CLASS_NAME/g" src/PluginEditor.cpp
 # Update the Hello World message
 sed -i '' "s/Hello JUCE World!/Hello $PRODUCT_NAME!/g" src/PluginEditor.cpp
 
+# Update VS Code launch.json for debugging
+echo "   • Updating VS Code debug configuration..."
+ESCAPED_PROJECT_NAME=$(printf '%s\n' "$PROJECT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
+ESCAPED_PRODUCT_NAME=$(printf '%s\n' "$PRODUCT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
+
+# Update the debug configuration path
+sed -i '' "s/JuceTemplate_artefacts/${ESCAPED_PROJECT_NAME}_artefacts/g" .vscode/launch.json
+sed -i '' "s/Juce Template/${ESCAPED_PRODUCT_NAME}/g" .vscode/launch.json
+
 echo "✅ Project setup complete!"
 echo
 echo "📊 Summary of changes:"
@@ -180,6 +189,7 @@ echo "   • Class names: JuceTemplateAudioProcessor → ${NEW_CLASS_NAME}"
 echo "   • Bundle ID: $BUNDLE_ID"
 echo "   • Manufacturer code: $MANUFACTURER_CODE"
 echo "   • Plugin code: $PROJECT_CODE"
+echo "   • VS Code debug configuration updated"
 echo "   • Welcome message updated"
 echo
 
