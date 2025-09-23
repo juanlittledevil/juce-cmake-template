@@ -182,6 +182,26 @@ echo "   • Manufacturer code: $MANUFACTURER_CODE"
 echo "   • Plugin code: $PROJECT_CODE"
 echo "   • Welcome message updated"
 echo
+
+# Clean up git history
+echo "🧹 Cleaning up template git history..."
+if [ -d ".git" ]; then
+    rm -rf .git
+    echo "   ✅ Removed original git repository"
+else
+    echo "   ℹ️  No git repository found to remove"
+fi
+
+echo
+echo "📝 To initialize your new git repository:"
+echo "   git init"
+echo "   git add ."
+echo "   git commit -m \"Initial commit: $PRODUCT_NAME project setup\""
+echo
+echo "🔗 To connect to a remote repository:"
+echo "   git remote add origin <your-repository-url>"
+echo "   git push -u origin main"
+echo
 echo "🏗️  Ready to build your new project:"
 echo "   ./build.sh"
 echo
