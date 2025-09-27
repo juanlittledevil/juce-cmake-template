@@ -145,18 +145,30 @@ Replace these class names throughout the source files:
 
 #### 🎯 VS Code Integration (Recommended)
 
+**Two Workflow Options:**
+
+� **Script Tasks (Beginner-friendly)** - Traditional task-based workflow, works immediately  
+⚡ **CMake Tools (Professional)** - Status bar buttons for build/debug
+
+> **Cross-Platform Note**: VS Code configuration auto-detects your platform's compiler and architecture. Works on macOS (Intel/Apple Silicon), Windows, and Linux without modification.
+
+additionally,
+
+> **⚠️ CMake Tools Important**: If using CMake Tools status bar buttons, targets only appear after the first build/configure. For immediate functionality, use Script Tasks instead.
+
 **One-Button Workflow:**
 
 1. **Open in VS Code**: `code .`
-2. **Build**: Press `⇧⌘B` (Shift+Cmd+B)
-3. **Run**: Left sidebar → "Run and Debug" → "Run Standalone App" → ▶️
-4. **Debug**: Left sidebar → "Run and Debug" → "Debug Standalone App" → ▶️
+2. **Select Kit**: Choose compiler when prompted (CMake Tools only)
+3. **Build**: Press `⇧⌘B` (Shift+Cmd+B) or use status bar Build button  
+4. **Run**: Left sidebar → "Run and Debug" → "Run Standalone App" → ▶️
+5. **Debug**: Left sidebar → "Run and Debug" → "Debug Standalone App" → ▶️
 
 **All Build Tasks:**
 
 - Press `⇧⌘P` → "Tasks: Run Task" → choose:
   - Build Project (Release)
-  - Build Project (Debug)
+  - Build Project (Debug)  
   - Build Tests
   - Run Tests
   - Clean Build
