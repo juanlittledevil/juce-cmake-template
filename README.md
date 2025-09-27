@@ -139,8 +139,30 @@ Replace these class names throughout the source files:
 - CMake 3.24 or later
 - Xcode Command Line Tools (for macOS): `xcode-select --install`
 - A C++20 compatible compiler
+- VS Code with C/C++ extension (recommended for best experience)
 
 ### Build and Run
+
+#### 🎯 VS Code Integration (Recommended)
+
+**One-Button Workflow:**
+
+1. **Open in VS Code**: `code .`
+2. **Build**: Press `⇧⌘B` (Shift+Cmd+B)
+3. **Run**: Left sidebar → "Run and Debug" → "Run Standalone App" → ▶️
+4. **Debug**: Left sidebar → "Run and Debug" → "Debug Standalone App" → ▶️
+
+**All Build Tasks:**
+
+- Press `⇧⌘P` → "Tasks: Run Task" → choose:
+  - Build Project (Release)
+  - Build Project (Debug)
+  - Build Tests
+  - Run Tests
+  - Clean Build
+  - Clean & Rebuild
+
+#### 📋 Command Line
 
 a. **Quick Build** (recommended):
 
@@ -159,15 +181,27 @@ cmake --build . --config Release
 c. **Run the Standalone App**:
 
 ```bash
-open "./build/Source/JuceTemplate_artefacts/Release/Standalone/Juce Template.app"
+open "./build/src/JuceTemplate_artefacts/Release/Standalone/Juce Template.app"
 ```
 
-### Clean Build
+#### 🧹 Clean Build
 
-To clean all build artifacts:
+**VS Code**: Press `⇧⌘P` → "Tasks: Run Task" → "Clean & Rebuild"
+
+**Command Line**:
 
 ```bash
 ./clean.sh
+```
+
+#### 🧪 Testing
+
+**VS Code**: Press `⇧⌘P` → "Tasks: Run Task" → "Run Tests"
+
+**Command Line**:
+
+```bash
+./build-tests.sh
 ```
 
 ## Project Structure

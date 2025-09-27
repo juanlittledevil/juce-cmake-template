@@ -95,6 +95,33 @@
             }
         },
         {
+            "label": "Clean & Rebuild",
+            "type": "shell",
+            "command": "./clean.sh && ./build.sh",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [
+                "$gcc",
+                {
+                    "owner": "cmake",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^CMake Error at (.*):(\\d+)\\s+\\((.*)\\):$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ]
+        },
+        {
             "label": "Setup New Project",
             "type": "shell",
             "command": "./setup-new-project.sh",

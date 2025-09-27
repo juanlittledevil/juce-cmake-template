@@ -25,7 +25,6 @@ Makefile
 *.make
 
 # IDE files (keep VS Code config for template)
-.vscode/settings.json
 .vscode/ipch/
 .idea/
 *.swp
