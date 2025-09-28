@@ -177,8 +177,9 @@ echo "   • Updating VS Code debug configuration..."
 ESCAPED_PROJECT_NAME=$(printf '%s\n' "$PROJECT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
 ESCAPED_PRODUCT_NAME=$(printf '%s\n' "$PRODUCT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
 
-# Update the debug configuration path - replace YOURPROJECTNAME placeholders
-sed -i '' "s/YOURPROJECTNAME/${ESCAPED_PROJECT_NAME}/g" .vscode/launch.json
+# Update the debug configuration paths - replace JuceTemplate with actual project values
+sed -i '' "s/JuceTemplate_artefacts/${ESCAPED_PROJECT_NAME}_artefacts/g" .vscode/launch.json
+sed -i '' "s/Juce Template/${ESCAPED_PRODUCT_NAME}/g" .vscode/launch.json
 
 echo "✅ Project setup complete!"
 echo

@@ -126,10 +126,11 @@ When copying this template to create a new project:
 
 1. **Use the setup script**: Run `./setup-new-project.sh` - this automatically updates all necessary files including VS Code debug configurations, project names, and class names
 2. **Manual setup** (if not using the script):
-   - Update `launch.json`: Replace `YOURPROJECTNAME` placeholders in debug configurations
-   - Find and replace all instances of `YOURPROJECTNAME` with your CMake target name
-   - Target name comes from `juce_add_plugin(YourName` in src/CMakeLists.txt
-   - Example: If you use `juce_add_plugin(MyPlugin`, replace `YOURPROJECTNAME` with `MyPlugin`
+   - Update `launch.json`: Replace `JuceTemplate` references in debug configurations
+   - Find and replace `JuceTemplate_artefacts` with `YourTargetName_artefacts`
+   - Find and replace `Juce Template` with `Your Product Name`
+   - Target name comes from `juce_add_plugin(YourTargetName` in src/CMakeLists.txt
+   - Product name comes from `PRODUCT_NAME "Your Product Name"` in src/CMakeLists.txt
 3. **Unit Tests configuration** should work without any changes
 
 ## Note about IntelliSense Paths
