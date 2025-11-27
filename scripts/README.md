@@ -25,7 +25,8 @@ chmod +x scripts/*.sh
   - Common options: `--debug` / `-g`, `--asan` / `-a` (build-asan dir), `--build-type` / `-t`, `--build-dir` / `-d`, `--help`.
   - Convenience: auto-detects project name from `CMakeLists.txt` and prints artifact locations after build.
   - Example: `./scripts/build.sh --debug`
-    - New flag: `--warn-as-error [on|off]` (default is enabled).
+    - New flag: `--warn-as-error [on|off]` (default is disabled / OFF).
+      - Example: `./scripts/build.sh --warn-as-error on` (enable warnings-as-errors for this configure)
       - Example: `./scripts/build.sh --warn-as-error off` (disable warnings-as-errors for this configure)
       - Alias: `--no-warn-as-error` to quickly disable enforcement.
 - `clean.sh` — Clean helper

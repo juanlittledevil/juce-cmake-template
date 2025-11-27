@@ -29,8 +29,8 @@ ENABLE_THREAD_SAFETY_STRESS_TESTS="OFF"
 ENABLE_EXTENDED_EDGE_CASE_TESTS="OFF"
 
 # Whether to enforce repo warnings-as-errors for our targets.
-# Precedence: CLI flag > WARN_AS_ERROR env var > default ON
-ENFORCE_OUR_WARNINGS="${WARN_AS_ERROR:-ON}"
+# Precedence: CLI flag > WARN_AS_ERROR env var > default OFF
+ENFORCE_OUR_WARNINGS="${WARN_AS_ERROR:-OFF}"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in

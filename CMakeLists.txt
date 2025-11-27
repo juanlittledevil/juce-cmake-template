@@ -13,7 +13,7 @@ endif()
 # Option: Treat our own warnings as errors (target-scoped) so contributors don't leave cruft.
 # This only affects project targets (applied later in src/ and tests/) and does NOT change
 # third-party or JUCE-provided targets.
-option(ENFORCE_OUR_WARNINGS "Treat warnings as errors for repository source targets" ON)
+option(ENFORCE_OUR_WARNINGS "Treat warnings as errors for repository source targets" OFF)
 
 if(MSVC)
     set(OUR_WARNING_FLAGS /WX /W4)

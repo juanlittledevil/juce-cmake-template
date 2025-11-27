@@ -61,7 +61,7 @@ If you reconfigure or change build folders and need to refresh the IDE database,
 
 This template has a project-scoped option to treat warnings-as-errors for the codebase to avoid leaving behind warning clutter.
 
-- Option: `ENFORCE_OUR_WARNINGS` (default: ON) — when enabled, build targets for this repository (plugin and tests) will be compiled with `-Werror -Wall -Wextra -Wpedantic` (or `/WX /W4` on MSVC).
+- Option: `ENFORCE_OUR_WARNINGS` (default: OFF) — when enabled, build targets for this repository (plugin and tests) will be compiled with `-Werror -Wall -Wextra -Wpedantic` (or `/WX /W4` on MSVC).
 - Opt-out: pass `-DENFORCE_OUR_WARNINGS=OFF` when configuring CMake if you'd like to disable this for a session.
 
 Examples:
