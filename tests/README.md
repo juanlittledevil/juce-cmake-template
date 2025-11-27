@@ -53,6 +53,27 @@ build/tests/UnitTests
 build/tests/UnitTests_artefacts/<Debug|Release>/UnitTests
 ```
 
+NOTE: The top-level CMake configuration now exports a compile_commands.json by default (this helps the C/C++ extension in VS Code find the correct include paths and compile flags for test sources).
+
+If you reconfigure or change build folders and need to refresh the IDE database, re-run a CMake configure/build (or run `cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`) and then use the C/C++ extension command "C/C++: Reset IntelliSense Database".
+
+## Warnings as errors for repo source
+
+This template has a project-scoped option to treat warnings-as-errors for the codebase to avoid leaving behind warning clutter.
+
+- Option: `ENFORCE_OUR_WARNINGS` (default: ON) — when enabled, build targets for this repository (plugin and tests) will be compiled with `-Werror -Wall -Wextra -Wpedantic` (or `/WX /W4` on MSVC).
+- Opt-out: pass `-DENFORCE_OUR_WARNINGS=OFF` when configuring CMake if you'd like to disable this for a session.
+
+Examples:
+
+```bash
+# Configure with our warnings enforced (default)
+cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+# Configure and disable enforcement for this configure
+cmake -S . -B build -DENFORCE_OUR_WARNINGS=OFF
+```
+
 Best practices
 
 - Keep tests unit-sized and deterministic.

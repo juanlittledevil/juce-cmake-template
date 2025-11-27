@@ -95,3 +95,8 @@ add_test(
     NAME RunUnitTests
     COMMAND UnitTests
 )
+
+if(ENFORCE_OUR_WARNINGS)
+    message(STATUS "Enforcing warnings-as-errors for test targets")
+    target_compile_options(UnitTests PRIVATE ${OUR_WARNING_FLAGS})
+endif()
