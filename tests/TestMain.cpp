@@ -15,6 +15,9 @@ int main (int argc, char* argv[])
     // Create test runner
     juce::UnitTestRunner testRunner;
     
+    // Use the default behaviour (assert on failure) so failing tests are
+    // surfaced immediately during development and debugging.
+
     // Run all tests
     testRunner.runAllTests();
     
