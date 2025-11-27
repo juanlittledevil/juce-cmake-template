@@ -28,6 +28,10 @@ ENABLE_PERFORMANCE_BENCHMARKING="OFF"
 ENABLE_THREAD_SAFETY_STRESS_TESTS="OFF"
 ENABLE_EXTENDED_EDGE_CASE_TESTS="OFF"
 
+# Whether to enforce repo warnings-as-errors for our targets.
+# Precedence: CLI flag > WARN_AS_ERROR env var > default ON
+ENFORCE_OUR_WARNINGS="${WARN_AS_ERROR:-ON}"
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --asan|-a)
@@ -59,6 +63,30 @@ while [[ $# -gt 0 ]]; do
                 echo "⚠️  Missing value for --build-dir"
                 exit 1
             fi
+            ;;
+        --warn-as-error)
+            # Accept optional value after flag: on or off. If no value provided, default to ON.
+            if [[ -n "$2" && ("$2" == "on" || "$2" == "off" || "$2" == "ON" || "$2" == "OFF") ]]; then
+                if [[ "$2" == "on" || "$2" == "ON" ]]; then
+                    ENFORCE_OUR_WARNINGS="ON"
+                else
+                    ENFORCE_OUR_WARNINGS="OFF"
+                fi
+                shift
+            else
+                ENFORCE_OUR_WARNINGS="ON"
+            fi
+            ;;
+        --warn-as-error=*)
+            val="${1#--warn-as-error=}"
+            if [[ "$val" == "on" || "$val" == "ON" ]]; then
+                ENFORCE_OUR_WARNINGS="ON"
+            else
+                ENFORCE_OUR_WARNINGS="OFF"
+            fi
+            ;;
+        --no-warn-as-error)
+            ENFORCE_OUR_WARNINGS="OFF"
             ;;
         --help|-h)
             cat <<EOF
@@ -98,6 +126,9 @@ EOF
         --edge-tests|--enable-edge-tests)
             ENABLE_EXTENDED_EDGE_CASE_TESTS="ON"
             ;;
+            --no-warn-as-error)
+                ENFORCE_OUR_WARNINGS="OFF"
+                ;;
         *)
             echo "⚠️  Unknown option: $1"
             exit 1
@@ -128,6 +159,7 @@ cmake .. -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -Wno-dev \
     -DENABLE_PERFORMANCE_BENCHMARKING="$ENABLE_PERFORMANCE_BENCHMARKING" \
     -DENABLE_THREAD_SAFETY_STRESS_TESTS="$ENABLE_THREAD_SAFETY_STRESS_TESTS" \
     -DENABLE_EXTENDED_EDGE_CASE_TESTS="$ENABLE_EXTENDED_EDGE_CASE_TESTS" \
+    -DENFORCE_OUR_WARNINGS="$ENFORCE_OUR_WARNINGS" \
     # Note: removed project-specific PRECALC and buffer-instruction flags to keep template generic
 
 # Build the project
