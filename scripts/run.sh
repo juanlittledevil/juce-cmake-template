@@ -43,19 +43,21 @@ while [[ $# -gt 0 ]]; do
       ;;
     --build-dir|-d)
       shift
-      if [[ -n "$1" ]]; then
+      # Defensive: ensure value present and not another flag
+      if [[ $# -gt 0 && "${1:0:1}" != "-" ]]; then
         BUILD_DIR="$1"
       else
-        echo "⚠️  Missing value for --build-dir" >&2
+        echo "⚠️  Missing or invalid value for --build-dir" >&2
         exit 1
       fi
       ;;
     --build-type|-t)
       shift
-      if [[ -n "$1" ]]; then
+      # Defensive: ensure value present and not another flag
+      if [[ $# -gt 0 && "${1:0:1}" != "-" ]]; then
         BUILD_TYPE="$1"
       else
-        echo "⚠️  Missing value for --build-type" >&2
+        echo "⚠️  Missing or invalid value for --build-type" >&2
         exit 1
       fi
       ;;
@@ -76,11 +78,12 @@ while [[ $# -gt 0 ]]; do
       ;;
     --log-file)
       shift
-      if [[ -n "$1" ]]; then
+      # Ensure the provided value exists and isn't another flag
+      if [[ $# -gt 0 && "${1:0:1}" != "-" ]]; then
         LOGGING_ENABLED="1"
         LOG_FILE="$1"
       else
-        echo "⚠️  Missing value for --log-file" >&2
+        echo "⚠️  Missing or invalid value for --log-file" >&2
         exit 1
       fi
       ;;
@@ -129,7 +132,7 @@ if [[ ! -d "$APP_PATH" ]]; then
   echo "Error: app not found at: $APP_PATH" >&2
   if [[ "${BUILD_FIRST}" == "1" ]] || [[ "${BUILD_IF_MISSING}" == "1" ]]; then
     echo "🔧 Requested build before launching; attempting to build ${BUILD_TYPE}..."
-    ./scripts/build.sh --build-type ${BUILD_TYPE}
+    ./scripts/build.sh --build-type "${BUILD_TYPE}"
   fi
 
   if [[ ! -d "$APP_PATH" ]]; then
