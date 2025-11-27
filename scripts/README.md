@@ -41,7 +41,7 @@ chmod +x scripts/*.sh
   - Example: `./scripts/generate_docs.sh` (writes to `docs/doxydocs`)
 - `run-tests.sh` — Unified test runner (unit, stress)
   - Powerful and flexible test runner. Supported options include `--build-first` / `-b`, `--build-if-missing` / `-m`, `--build-type` / `-t`, `--filter`, `--extended-edge-cases`, `--asan` and `--env KEY=VALUE`.
-  - New `--all` flag: orchestrates unit and stress test runs from a single command. Use `--build-first` with `--all` to build and run everything.
+  - By default the script will try to detect test suites declared in `tests/*.cpp` and only run those (project-local tests) — this keeps template runs fast and avoids running the full JUCE upstream tests during quick developer iterations. Project tests are run under the `project` category; you can override this with `--category <name>` or request `--all` to run the entire test-suite (unit + stress/extended categories).
   - NOTE: run from the repository root (or set `PROJECT_HOME`) for path correctness.
   - Example: `./scripts/run-tests.sh --build-if-missing -g --filter "Editor"`
 - `run.sh`

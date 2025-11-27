@@ -12,7 +12,7 @@
 class PluginBasicTests : public juce::UnitTest
 {
 public:
-    PluginBasicTests() : juce::UnitTest("Plugin Basic Tests") {}
+    PluginBasicTests() : juce::UnitTest("Plugin Basic Tests", "project") {}
     
     void runTest() override
     {
@@ -56,7 +56,7 @@ public:
 class PluginProcessingTests : public juce::UnitTest
 {
 public:
-    PluginProcessingTests() : juce::UnitTest("Plugin Processing Tests") {}
+    PluginProcessingTests() : juce::UnitTest("Plugin Processing Tests", "project") {}
     
     void runTest() override
     {
@@ -119,7 +119,7 @@ public:
 class PluginParameterTests : public juce::UnitTest
 {
 public:
-    PluginParameterTests() : juce::UnitTest("Plugin Parameter Tests") {}
+    PluginParameterTests() : juce::UnitTest("Plugin Parameter Tests", "project") {}
     
     void runTest() override
     {

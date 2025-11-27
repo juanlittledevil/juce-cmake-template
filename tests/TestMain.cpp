@@ -11,15 +11,31 @@
 int main (int argc, char* argv[])
 {
     juce::ScopedJuceInitialiser_GUI libraryInitialiser;
-    
+
     // Create test runner
     juce::UnitTestRunner testRunner;
-    
-    // Use the default behaviour (assert on failure) so failing tests are
-    // surfaced immediately during development and debugging.
 
-    // Run all tests
-    testRunner.runAllTests();
+    // parse simple command-line options supported by the template runner
+    juce::String category;
+    juce::String filter;
+    for (int i = 1; i < argc; ++i)
+    {
+        juce::String arg (argv[i]);
+        if (arg.startsWith ("--category="))
+            category = arg.fromFirstOccurrenceOf ("=", false, false);
+        else if (arg == "--category" && i + 1 < argc)
+            category = juce::String (argv[++i]);
+        else if (arg.startsWith ("--filter="))
+            filter = arg.fromFirstOccurrenceOf ("=", false, false);
+        else if (arg == "--filter" && i + 1 < argc)
+            filter = juce::String (argv[++i]);
+    }
+
+    // Prefer category selection if provided (JUCE has a runTestsInCategory API).
+    if (category.isNotEmpty())
+        testRunner.runTestsInCategory (category, 0);
+    else
+        testRunner.runAllTests (0);
     
     // Print results
     int numFailures = 0;

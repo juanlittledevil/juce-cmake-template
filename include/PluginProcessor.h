@@ -46,7 +46,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     // Expose the current sample rate so tests can inspect it
-    double getSampleRate() const override;
+    double getSampleRate() const;
 
 private:
     double currentSampleRate = 0.0;

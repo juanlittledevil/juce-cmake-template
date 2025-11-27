@@ -75,7 +75,9 @@ void JuceTemplateAudioProcessor::setCurrentProgram (int index)
 
 const juce::String JuceTemplateAudioProcessor::getProgramName (int index)
 {
-    return {};
+    // Return a simple non-empty default program name so unit tests and hosts
+    // that expect at least one program can function correctly.
+    return "Default";
 }
 
 void JuceTemplateAudioProcessor::changeProgramName (int index, const juce::String& newName)

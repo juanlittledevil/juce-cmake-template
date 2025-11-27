@@ -1,64 +1,65 @@
-# Unit Tests for JUCE Project
+# Tests
 
-This directory contains unit tests for the JUCE project using JUCE's built-in testing framework.
+This folder contains the template's unit tests and a concise manual for contributors.
 
-## Running Tests
+Overview
 
-### From Command Line
+- Tests use JUCE's UnitTest framework.
+- The repository follows a scripts-first workflow; prefer `./scripts/build.sh` / `./scripts/run-tests.sh` over ad-hoc helper scripts.
+
+Quick commands
+
+- Run project tests (fast — good for local development):
 
 ```bash
-./build-tests.sh    # Build tests
-./build/tests/UnitTests  # Run tests
+./scripts/run-tests.sh --category project
 ```
 
-### From VS Code
+- Run the entire test-suite (slow — full verification):
 
-- **Build & Run Tests**: `Cmd+Shift+P` → "Tasks: Run Task" → "Run Tests"
-- **Debug Tests**: `F5` → "Debug Unit Tests"
-- **Run Tests Only**: `Cmd+Shift+P` → "Tasks: Run Task" → "Build Tests"
+```bash
+./scripts/run-tests.sh --all
+```
 
-## Test Structure
+- CI example — build once, Release, run full suite:
 
-- `CMakeLists.txt` - Test build configuration
-- `TestMain.cpp` - Test runner entry point
-- `PluginTests.cpp` - Plugin-specific tests
-- Add more test files as needed
+```bash
+./scripts/run-tests.sh --build-first --build-type Release --all
+```
 
-## Writing Tests
+Conventions
 
-JUCE uses its own testing framework. Here's a basic test structure:
+- Put tests in `tests/` and keep focused, fast tests in the `project` category so `./scripts/run-tests.sh` can run them by default.
+
+Example
 
 ```cpp
-class MyUnitTest : public juce::UnitTest
+class PluginBasicTests : public juce::UnitTest
 {
 public:
-    MyUnitTest() : juce::UnitTest("My Test Category") {}
-    
-    void runTest() override
-    {
-        beginTest("Test description");
-        
-        // Your test code here
-        expect(someCondition, "Error message if fails");
-        expectEquals(actualValue, expectedValue, "Values should match");
-    }
+    PluginBasicTests() : juce::UnitTest("Plugin Basic Tests", "project") {}
+    void runTest() override { beginTest("Minimal example"); expect(true); }
 };
 
-// Register the test
-static MyUnitTest myUnitTest;
+static PluginBasicTests pluginBasicTests;
 ```
 
-## Test Categories
+Running in an IDE (VS Code)
 
-- **Audio Processing Tests**: Test DSP algorithms and audio processing
-- **Parameter Tests**: Test plugin parameters and automation
-- **GUI Tests**: Test UI components and interactions
-- **Utility Tests**: Test helper functions and utilities
+- Use CMake Tools to configure and build the UnitTests target, or run the test binary produced by the scripts. Typical places for the test binary:
 
-## Best Practices
+```txt
+build/tests/UnitTests
+build/tests/UnitTests_artefacts/<Debug|Release>/UnitTests
+```
 
-1. Keep tests focused and atomic
-2. Use descriptive test names
-3. Test both success and failure cases
-4. Mock external dependencies when possible
-5. Use JUCE's expectation macros for clear feedback
+Best practices
+
+- Keep tests unit-sized and deterministic.
+- Reserve heavy or long-running tests for separate categories (don't include them in `project`).
+- Use descriptive failure messages with JUCE's `expect` macros.
+
+Further reading
+
+- `./scripts/README.md` — script usage and runner options
+- `docs/index.md` — documentation landing page (template-standard)

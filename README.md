@@ -46,6 +46,11 @@ This template includes comprehensive testing and debugging support:
 
 📖 **See [DEBUGGING.md](DEBUGGING.md) for detailed testing and debugging guide**
 
+📚 Developer docs: See the top-level docs entry for more detailed guides and a central index:
+
+- `docs/index.md` — canonical entry point for project documentation (developer docs, architecture, testing guidance)
+
+
 ## Using as a Template
 
 This project is designed to be a reusable template for new JUCE projects. Here's how to create a new project:

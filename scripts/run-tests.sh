@@ -71,7 +71,9 @@ run_tests_from_binary() {
         return
     fi
     print_env_summary
-    if [ -n "$RUN_FILTER" ]; then
+    if [ -n "$RUN_CATEGORY" ]; then
+        SKIP_OVERWRITE_TEST=1 "$binary" --reporter console --category="$RUN_CATEGORY" "${FORWARD_ARGS[@]}"
+    elif [ -n "$RUN_FILTER" ]; then
         SKIP_OVERWRITE_TEST=1 "$binary" --reporter console --filter="$RUN_FILTER" "${FORWARD_ARGS[@]}"
     else
         SKIP_OVERWRITE_TEST=1 "$binary" --reporter console "${FORWARD_ARGS[@]}"
@@ -107,6 +109,7 @@ run_build_for_tests() {
 }
 
 RUN_FILTER=""
+RUN_CATEGORY=""
 BUILD_TYPE=""
 BUILD_DIR="build"
 BUILD_FIRST="0"
@@ -128,6 +131,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --filter=*)
             RUN_FILTER="${key#*=}"
+            shift
+            ;;
+        --category)
+            RUN_CATEGORY="$2"
+            shift; shift
+            ;;
+        --category=*)
+            RUN_CATEGORY="${key#*=}"
             shift
             ;;
         --build-type|-t)
@@ -223,20 +234,21 @@ while [[ $# -gt 0 ]]; do
 Usage: $0 [options]
 
 Options:
-  --filter <pattern>          Run a subset of tests.
-  --build-type|-t <type>      Choose Release/Debug/etc.
-  --build-dir|-d <dir>        Use an alternate build directory.
-  --debug|-g                  Shortcut for --build-type Debug.
-  --release                   Shortcut for --build-type Release.
-  --asan                      Run tests from build-asan dir (builds Debug ASAN if needed).
+    --filter <pattern>          Run a subset of tests.
+    --category <name>           Run tests from a specific category (e.g. "project").
+    --build-type|-t <type>      Choose Release/Debug/etc.
+    --build-dir|-d <dir>        Use an alternate build directory.
+    --debug|-g                  Shortcut for --build-type Debug.
+    --release                   Shortcut for --build-type Release.
+    --asan                      Run tests from build-asan dir (builds Debug ASAN if needed).
     --build-first|-b            Always rebuild before running tests.
-  --build-if-missing|-m       Build only when UnitTests binary is absent.
+    --build-if-missing|-m       Build only when UnitTests binary is absent.
     --extended-edge-cases       Build (if needed) with --edge-tests and run only the extended category.
     --run-long-stress|-s        (not supported in template)
     (benchmarks/perf are disabled in the template)
-  --env KEY=VALUE             Export arbitrary env vars before running tests.
-  --help                      Show this message and exit.
-  --                          Forward remaining args directly to UnitTests binary.
+    --env KEY=VALUE             Export arbitrary env vars before running tests.
+    --help                      Show this message and exit.
+    --                          Forward remaining args directly to UnitTests binary.
 EOF
             exit 0
             ;;
@@ -255,6 +267,32 @@ EOF
     esac
 done
 
+# If no explicit filter was provided, and the user didn't request --all, try to
+# detect project-local tests under tests/*.cpp and use them as the default
+# filter so template users run only their own tests by default (fast & predictable).
+if [[ -z "${RUN_FILTER}" ]] && [[ "${ALL_MODE}" != "1" ]]; then
+    if compgen -G "tests/*.cpp" >/dev/null 2>&1; then
+        detected_names=()
+        for f in tests/*.cpp; do
+            # Extract strings passed to juce::UnitTest("...") constructors
+            while IFS= read -r name; do
+                # Trim and append non-empty names
+                name_trimmed=$(echo "$name" | sed -e 's/^\s*//' -e 's/\s*$//')
+                if [[ -n "$name_trimmed" ]]; then
+                    detected_names+=("$name_trimmed")
+                fi
+            done < <(sed -nE 's/.*UnitTest[[:space:]]*\([[:space:]]*"([^"]+)".*/\1/p' "$f")
+        done
+
+        if [[ ${#detected_names[@]} -gt 0 ]]; then
+            # Found project-local tests. Prefer to run them by category ("project")
+            # so we can rely on JUCE's built-in category filtering and keep
+            # the behaviour robust and compact.
+            RUN_CATEGORY="project"
+            echo "🔎 Detected project tests — defaulting to run only tests in category: $RUN_CATEGORY"
+        fi
+    fi
+fi
 if [ -n "$BUILD_TYPE" ]; then
     if [[ "$BUILD_FIRST" == "1" ]]; then
         echo "🔧 --build-first specified; building ${BUILD_TYPE} build before running tests..."
