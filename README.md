@@ -154,7 +154,7 @@ Replace these class names throughout the source files:
 
 **Two Workflow Options:**
 
-� **Script Tasks (Beginner-friendly)** - Traditional task-based workflow, works immediately  
+📋 **Script Tasks (Beginner-friendly)** - Traditional task-based workflow, works immediately  
 ⚡ **CMake Tools (Professional)** - Status bar buttons for build/debug
 
 > **Cross-Platform Note**: VS Code configuration auto-detects your platform's compiler and architecture. Works on macOS (Intel/Apple Silicon), Windows, and Linux without modification.
