@@ -22,13 +22,11 @@ BUILD_TYPE="Release"
 BUILD_DIR="build"
 USE_ASAN="OFF"
 ENABLE_UI_DEBUG="OFF"
-ENABLE_PRECALC_DEBUG="OFF"
 ENABLE_PROCESSBLOCK_DEBUG="OFF"
 ENABLE_DEBUG_VISUALIZATIONS="OFF"
 ENABLE_PERFORMANCE_BENCHMARKING="OFF"
 ENABLE_THREAD_SAFETY_STRESS_TESTS="OFF"
 ENABLE_EXTENDED_EDGE_CASE_TESTS="OFF"
-ENABLE_BUFFER_INSTRUCTION_LOGS="OFF"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -73,22 +71,17 @@ Options:
     --debug, -g       Shortcut to set build type to Debug.
     --ui-debug        Compile-time flag to enable UI debug helpers (sets -DENABLE_UI_DEBUG=ON).
     --enable-ui-debug Alias for --ui-debug.
-    --precalc-debug   Enable PreCalculationEngine one-shot debug dump tooling.
     --processblock-debug Enable verbose processBlock logging helpers.
     --debug-visualizations Turn on gap/discontinuity overlays and related UI aids.
     --perf-benchmarks Enable performance benchmarking utilities.
     --thread-stress-tests Enable thread-safety stress test instrumentation.
     --edge-tests      Enable extended edge case validation harnesses.
-    --buffer-instruction-logs Enable verbose BufferInstructionManager dumps.
     --help            Show this message and exit.
 EOF
             exit 0
             ;;
         --ui-debug|--enable-ui-debug)
             ENABLE_UI_DEBUG="ON"
-            ;;
-        --precalc-debug)
-            ENABLE_PRECALC_DEBUG="ON"
             ;;
         --processblock-debug)
             ENABLE_PROCESSBLOCK_DEBUG="ON"
@@ -104,9 +97,6 @@ EOF
             ;;
         --edge-tests|--enable-edge-tests)
             ENABLE_EXTENDED_EDGE_CASE_TESTS="ON"
-            ;;
-        --buffer-instruction-logs)
-            ENABLE_BUFFER_INSTRUCTION_LOGS="ON"
             ;;
         *)
             echo "⚠️  Unknown option: $1"
@@ -133,13 +123,12 @@ echo "📋 Configuring project..."
 cmake .. -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -Wno-dev \
     -DUSE_ASAN="$USE_ASAN" \
     -DENABLE_UI_DEBUG="$ENABLE_UI_DEBUG" \
-    -DENABLE_PRECALC_DEBUG="$ENABLE_PRECALC_DEBUG" \
     -DENABLE_PROCESSBLOCK_DEBUG="$ENABLE_PROCESSBLOCK_DEBUG" \
     -DENABLE_DEBUG_VISUALIZATIONS="$ENABLE_DEBUG_VISUALIZATIONS" \
     -DENABLE_PERFORMANCE_BENCHMARKING="$ENABLE_PERFORMANCE_BENCHMARKING" \
     -DENABLE_THREAD_SAFETY_STRESS_TESTS="$ENABLE_THREAD_SAFETY_STRESS_TESTS" \
     -DENABLE_EXTENDED_EDGE_CASE_TESTS="$ENABLE_EXTENDED_EDGE_CASE_TESTS" \
-    -DENABLE_BUFFER_INSTRUCTION_LOGS="$ENABLE_BUFFER_INSTRUCTION_LOGS"
+    # Note: removed TurnTabby-specific PRECALC and buffer-instruction flags to keep template generic
 
 # Build the project
 echo "🔨 Building project..."

@@ -20,12 +20,11 @@ chmod +x scripts/*.sh
   - VS Code CMake Tools (advanced): Use the status-bar CMake buttons — remember targets only appear after an initial configure/build.
 
 ## Script catalog (alphabetical)
+
 - `build.sh` — Main build script (Release default)
   - Common options: `--debug` / `-g`, `--asan` / `-a` (build-asan dir), `--build-type` / `-t`, `--build-dir` / `-d`, `--help`.
   - Convenience: auto-detects project name from `CMakeLists.txt` and prints artifact locations after build.
   - Example: `./scripts/build.sh --debug`
-- `ci_check_precalc_debug.sh`
-  - CI helper script to validate precalc debug artifacts and dump traces.
 - `clean.sh` — Clean helper
   - Removes local build directories; conservative by default (does not remove external or shared workspaces without explicit opt-in).
   - Example: `./scripts/clean.sh`
@@ -40,9 +39,6 @@ chmod +x scripts/*.sh
 - `generate_docs.sh`
   - Generate Doxygen/Markdown developer docs. See `docs/` for details.
   - Example: `./scripts/generate_docs.sh` (writes to `docs/doxydocs`)
--- `run-all-tests.sh` — (deprecated / optional)
-  - Orchestration script that builds and runs unit/stress/benchmark suites. We're consolidating this behavior into `run-tests.sh --all` so there is one canonical runner.
-  - Example: `./scripts/run-tests.sh --all --build-first`
 - `run-tests.sh` — Unified test runner (unit, stress, perf)
   - Powerful and flexible test runner. Supported options include `--build-first` / `-b`, `--build-if-missing` / `-m`, `--build-type` / `-t`, `--filter`, `--perf-threshold`, `--run-long-stress`, `--run-perf-regression`, `--extended-edge-cases`, `--asan` and `--env KEY=VALUE`.
   - New `--all` flag (planned): orchestrates unit, stress and benchmark runs from a single command. Use `--build-first` with `--all` to build and run everything.
@@ -62,13 +58,13 @@ chmod +x scripts/*.sh
 
 ## Notes & tips
 
-- Many scripts produce build artifacts under `build/src/TurnTabby_artefacts/{Debug,Release}`, logs in `build/`, and docs under `docs/doxydocs`.
+- Many scripts produce build artifacts under `build/src/<project>_artefacts/{Debug,Release}` (or a similarly named artifacts folder), logs in `build/`, and docs under `docs/doxydocs`.
 - Prefer `--build-if-missing` during iterative development to avoid expensive rebuilds.
-- Use the `--debug` flag (optionally with `--precalc-debug`, `--debug-visualizations`, etc.) only when you need the heavy notation/visualization tooling; they significantly increase build times.
+-- Use the `--debug` flag (optionally with `--debug-visualizations`, etc.) only when you need heavy debug/visualization tooling; these options can significantly increase build times.
 - See `docs/dev/` for deeper guidance on stress/benchmark/debugging scripts:
   - `docs/dev/PERFORMANCE_BENCHMARKING.md` (benchmarks)
   - `docs/dev/THREAD_SAFETY_STRESS_TESTING.md` (stress tests)
-  - `docs/dev/DEBUG_PRECALC.md` (precalc debug)
+  - (project-specific debug documents may be present under docs/dev/)
   - `docs/dev/EDGE_CASE_VALIDATION.md` (edge-case testing)
 
 If you want to add usage examples for particular scripts (or expand `--help` output), tell me which scripts you want to document richer and I’ll add them.

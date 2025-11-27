@@ -1,4 +1,4 @@
-# TurnTabby project environment setup
+# JUCE project environment setup
 # This file is sourced by ~/.zshrc when entering the project directory
 #
 # To make this work, add the following to your ~/.zshrc:
