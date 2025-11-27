@@ -7,7 +7,7 @@ project(JuceTemplate VERSION 1.0.0)
 # Users may override this by setting CMAKE_EXPORT_COMPILE_COMMANDS explicitly when
 # configuring (e.g. -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF).
 if(NOT DEFINED CMAKE_EXPORT_COMPILE_COMMANDS)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json for IDEs" )
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json for IDEs")
 endif()
 
 # Option: Treat our own warnings as errors (target-scoped) so contributors don't leave cruft.
