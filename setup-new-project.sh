@@ -34,6 +34,9 @@ prompt_with_default "Company domain (for bundle ID)" "mycompany.com" COMPANY_DOM
 prompt_with_default "Plugin type (synth/effect)" "effect" PLUGIN_TYPE
 prompt_with_default "Needs MIDI input? (yes/no)" "no" NEEDS_MIDI
 
+# Ask whether to enable warnings-as-errors for the new project
+prompt_with_default "Enable warnings-as-errors for this new project? (yes/no)" "no" ENABLE_WARNINGS_AS_ERRORS
+
 echo
 echo "🔧 Configuration Summary:"
 echo "   Project Name: $PROJECT_NAME"
@@ -64,6 +67,13 @@ else
     MIDI_INPUT="FALSE"
 fi
 
+# Convert warnings-as-errors answer into a CMake-friendly ON/OFF value
+if [ "$ENABLE_WARNINGS_AS_ERRORS" = "yes" ] || [ "$ENABLE_WARNINGS_AS_ERRORS" = "y" ]; then
+    CMAKE_WARN_AS_ERRORS_VAL="ON"
+else
+    CMAKE_WARN_AS_ERRORS_VAL="OFF"
+fi
+
 # Generate bundle ID (remove spaces and convert to lowercase)
 CLEAN_COMPANY=$(echo "$COMPANY_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
 CLEAN_PROJECT=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
@@ -86,6 +96,9 @@ echo "🚀 Updating project files..."
 
 # Update CMakeLists.txt - main project name
 sed -i '' "s/project(JuceTemplate VERSION 1.0.0)/project($PROJECT_NAME VERSION 1.0.0)/" CMakeLists.txt
+
+# Set warnings-as-errors default in new project CMakeLists
+sed -i '' "s/option(ENFORCE_OUR_WARNINGS \"Treat warnings as errors for repository source targets\" \(ON\|OFF\))/option(ENFORCE_OUR_WARNINGS \"Treat warnings as errors for repository source targets\" ${CMAKE_WARN_AS_ERRORS_VAL})/" CMakeLists.txt || true
 
 # Update Source/CMakeLists.txt with all the new values
 cat > src/CMakeLists.txt << EOF
@@ -191,6 +204,8 @@ echo "   • Manufacturer code: $MANUFACTURER_CODE"
 echo "   • Plugin code: $PROJECT_CODE"
 echo "   • VS Code debug configuration updated"
 echo "   • Welcome message updated"
+
+echo "   • Warnings-as-errors enabled: ${ENABLE_WARNINGS_AS_ERRORS}"
 echo
 
 # Clean up git history
