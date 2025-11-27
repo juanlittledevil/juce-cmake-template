@@ -64,7 +64,7 @@ chmod +x scripts/*.sh
 
 - Many scripts produce build artifacts under `build/src/<project>_artefacts/{Debug,Release}` (or a similarly named artifacts folder), logs in `build/`, and docs under `docs/doxydocs`.
 - Prefer `--build-if-missing` during iterative development to avoid expensive rebuilds.
--- Use the `--debug` flag (optionally with `--debug-visualizations`, etc.) only when you need heavy debug/visualization tooling; these options can significantly increase build times.
+- Use the `--debug` flag (optionally with `--debug-visualizations`, etc.) only when you need heavy debug/visualization tooling; these options can significantly increase build times.
 - See `docs/dev/` for deeper guidance on stress/benchmark/debugging scripts:
   - (performance benchmarking docs removed from template)
   - `docs/dev/THREAD_SAFETY_STRESS_TESTING.md` (stress tests)
