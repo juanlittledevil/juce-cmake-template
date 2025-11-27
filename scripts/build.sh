@@ -41,10 +41,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         --build-type|-t)
             shift
-            if [[ -n "$1" ]]; then
+            # Defensive: ensure a value was provided (and it's not another flag)
+            if [[ $# -gt 0 && "${1:0:1}" != "-" ]]; then
                 BUILD_TYPE="$1"
             else
-                echo "⚠️  Missing value for --build-type"
+                echo "⚠️  Missing or invalid value for --build-type" >&2
                 exit 1
             fi
             ;;
@@ -57,10 +58,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         --build-dir|-d)
             shift
-            if [[ -n "$1" ]]; then
+            # Defensive: ensure a value was provided (and it's not another flag)
+            if [[ $# -gt 0 && "${1:0:1}" != "-" ]]; then
                 BUILD_DIR="$1"
             else
-                echo "⚠️  Missing value for --build-dir"
+                echo "⚠️  Missing or invalid value for --build-dir" >&2
                 exit 1
             fi
             ;;
@@ -126,9 +128,6 @@ EOF
         --edge-tests|--enable-edge-tests)
             ENABLE_EXTENDED_EDGE_CASE_TESTS="ON"
             ;;
-            --no-warn-as-error)
-                ENFORCE_OUR_WARNINGS="OFF"
-                ;;
         *)
             echo "⚠️  Unknown option: $1"
             exit 1
@@ -159,8 +158,9 @@ cmake .. -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -Wno-dev \
     -DENABLE_PERFORMANCE_BENCHMARKING="$ENABLE_PERFORMANCE_BENCHMARKING" \
     -DENABLE_THREAD_SAFETY_STRESS_TESTS="$ENABLE_THREAD_SAFETY_STRESS_TESTS" \
     -DENABLE_EXTENDED_EDGE_CASE_TESTS="$ENABLE_EXTENDED_EDGE_CASE_TESTS" \
-    -DENFORCE_OUR_WARNINGS="$ENFORCE_OUR_WARNINGS" \
-    # Note: removed project-specific PRECALC and buffer-instruction flags to keep template generic
+    -DENFORCE_OUR_WARNINGS="$ENFORCE_OUR_WARNINGS"
+
+# Note: removed project-specific PRECALC and buffer-instruction flags to keep template generic
 
 # Build the project
 echo "🔨 Building project..."
