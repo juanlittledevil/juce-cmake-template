@@ -126,24 +126,40 @@ while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
         --filter)
-            RUN_FILTER="$2"
-            shift; shift
+            # Defensive: ensure a value exists and is not another flag
+            if [[ $# -gt 1 && "${2:0:1}" != "-" ]]; then
+                RUN_FILTER="$2"
+                shift 2
+            else
+                echo "⚠️  Missing or invalid value for --filter" >&2
+                exit 1
+            fi
             ;;
         --filter=*)
             RUN_FILTER="${key#*=}"
             shift
             ;;
         --category)
-            RUN_CATEGORY="$2"
-            shift; shift
+            if [[ $# -gt 1 && "${2:0:1}" != "-" ]]; then
+                RUN_CATEGORY="$2"
+                shift 2
+            else
+                echo "⚠️  Missing or invalid value for --category" >&2
+                exit 1
+            fi
             ;;
         --category=*)
             RUN_CATEGORY="${key#*=}"
             shift
             ;;
         --build-type|-t)
-            BUILD_TYPE="$2"
-            shift; shift
+            if [[ $# -gt 1 && "${2:0:1}" != "-" ]]; then
+                BUILD_TYPE="$2"
+                shift 2
+            else
+                echo "⚠️  Missing or invalid value for --build-type" >&2
+                exit 1
+            fi
             ;;
         --build-type=*)
             BUILD_TYPE="${key#*=}"
@@ -158,8 +174,13 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --build-dir|-d)
-            BUILD_DIR="$2"
-            shift; shift
+            if [[ $# -gt 1 && "${2:0:1}" != "-" ]]; then
+                BUILD_DIR="$2"
+                shift 2
+            else
+                echo "⚠️  Missing or invalid value for --build-dir" >&2
+                exit 1
+            fi
             ;;
         --build-dir=*)
             BUILD_DIR="${key#*=}"
@@ -357,7 +378,7 @@ run_all_tests() {
 
     # Stress tests
     if [[ "${RUN_STRESS}" == "1" ]]; then
-        if [[ "${ENABLE_STRESS}" == "1" ]]; then
+        if [[ "${ENABLE_THREAD_STRESS}" == "1" ]]; then
             echo "🧵 Running thread-safety stress tests..."
             # long-stress is intentionally ignored by template runner
             "$path" --category="ThreadSafetyStressTests"
