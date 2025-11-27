@@ -2,6 +2,30 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "[CMake] Debug Standalone App",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/src/JuceTemplate_artefacts/Debug/Standalone/Juce Template.app/Contents/MacOS/Juce Template",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
+        {
+            "name": "[CMake] Debug Unit Tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tests/UnitTests_artefacts/Debug/UnitTests",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
+        {
             "name": "Debug Standalone App",
             "type": "cppdbg",
             "request": "launch",
@@ -45,7 +69,7 @@
             "name": "Debug Unit Tests",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/tests/UnitTests",
+            "program": "${workspaceFolder}/build/tests/UnitTests_artefacts/Debug/UnitTests",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -46,6 +46,10 @@ This template includes comprehensive testing and debugging support:
 
 📖 **See [DEBUGGING.md](DEBUGGING.md) for detailed testing and debugging guide**
 
+📚 Developer docs: See the top-level docs entry for more detailed guides and a central index:
+
+- `docs/index.md` — canonical entry point for project documentation (developer docs, architecture, testing guidance)
+
 ## Using as a Template
 
 This project is designed to be a reusable template for new JUCE projects. Here's how to create a new project:
@@ -66,12 +70,15 @@ This project is designed to be a reusable template for new JUCE projects. Here's
    ```
 
    The script will prompt you for:
+
    - Project name (e.g., "MyReverb")
    - Product name (e.g., "My Reverb Plugin")
    - Company name (e.g., "MyCompany")
    - Company domain (e.g., "mycompany.com")
    - Plugin type (synth or effect)
    - MIDI input requirement
+
+   Additionally, the setup script now includes an option to enable project-wide "warnings-as-errors" enforcement. This is OFF by default (recommended) to avoid third-party or template warnings breaking a first-time build; during setup you'll be asked whether you want to enable it for the new project. You can always change this later in the new project's `CMakeLists.txt` by setting `ENFORCE_OUR_WARNINGS` ON or OFF.
 
 3. **Build your new project**:
 
@@ -145,18 +152,30 @@ Replace these class names throughout the source files:
 
 #### 🎯 VS Code Integration (Recommended)
 
+**Two Workflow Options:**
+
+📋 **Script Tasks (Beginner-friendly)** - Traditional task-based workflow, works immediately  
+⚡ **CMake Tools (Professional)** - Status bar buttons for build/debug
+
+> **Cross-Platform Note**: VS Code configuration auto-detects your platform's compiler and architecture. Works on macOS (Intel/Apple Silicon), Windows, and Linux without modification.
+
+additionally,
+
+> **⚠️ CMake Tools Important**: If using CMake Tools status bar buttons, targets only appear after the first build/configure. For immediate functionality, use Script Tasks instead.
+
 **One-Button Workflow:**
 
 1. **Open in VS Code**: `code .`
-2. **Build**: Press `⇧⌘B` (Shift+Cmd+B)
-3. **Run**: Left sidebar → "Run and Debug" → "Run Standalone App" → ▶️
-4. **Debug**: Left sidebar → "Run and Debug" → "Debug Standalone App" → ▶️
+2. **Select Kit**: Choose compiler when prompted (CMake Tools only)
+3. **Build**: Press `⇧⌘B` (Shift+Cmd+B) or use status bar Build button  
+4. **Run**: Left sidebar → "Run and Debug" → "Run Standalone App" → ▶️
+5. **Debug**: Left sidebar → "Run and Debug" → "Debug Standalone App" → ▶️
 
 **All Build Tasks:**
 
 - Press `⇧⌘P` → "Tasks: Run Task" → choose:
   - Build Project (Release)
-  - Build Project (Debug)
+  - Build Project (Debug)  
   - Build Tests
   - Run Tests
   - Clean Build

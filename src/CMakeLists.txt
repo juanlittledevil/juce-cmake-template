@@ -49,6 +49,11 @@ target_link_libraries(JuceTemplate
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
 
+if(ENFORCE_OUR_WARNINGS)
+    message(STATUS "Enforcing warnings-as-errors for project targets")
+    target_compile_options(JuceTemplate PRIVATE ${OUR_WARNING_FLAGS})
+endif()
+
 # Add external libraries support
 # Include any external libraries from the lib/ directory
 file(GLOB_RECURSE EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.cpp")

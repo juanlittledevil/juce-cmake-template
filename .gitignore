@@ -35,3 +35,7 @@ tests/build/
 
 # Logs
 *.log
+
+# Ignore workspace-level compile database (user-generated)
+compile_commands.json
+.vscode/compile_commands.json

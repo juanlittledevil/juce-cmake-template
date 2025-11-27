@@ -4,7 +4,7 @@
         {
             "label": "Build Project",
             "type": "shell",
-            "command": "./build.sh",
+            "command": "./scripts/build.sh",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -34,7 +34,7 @@
         {
             "label": "Build Project (Debug)",
             "type": "shell",
-            "command": "mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -Wno-dev && cmake --build . --config Debug --parallel $(sysctl -n hw.logicalcpu)",
+            "command": "mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug -Wno-dev && cmake --build . --config Debug --parallel",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -51,7 +51,7 @@
         {
             "label": "Build Tests",
             "type": "shell",
-            "command": "./build-tests.sh",
+            "command": "./scripts/build.sh --build-type Debug",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -68,9 +68,8 @@
         {
             "label": "Run Tests",
             "type": "shell",
-            "command": "./build/tests/UnitTests",
+            "command": "./scripts/run-tests.sh --build-if-missing",
             "group": "test",
-            "dependsOn": "Build Tests",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -83,7 +82,7 @@
         {
             "label": "Clean Build",
             "type": "shell",
-            "command": "./clean.sh",
+            "command": "./scripts/clean.sh",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -97,7 +96,7 @@
         {
             "label": "Clean & Rebuild",
             "type": "shell",
-            "command": "./clean.sh && ./build.sh",
+            "command": "./scripts/clean.sh && ./scripts/build.sh",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -124,7 +123,7 @@
         {
             "label": "Setup New Project",
             "type": "shell",
-            "command": "./setup-new-project.sh",
+            "command": "./scripts/setup-new-project.sh",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -132,6 +131,137 @@
                 "focus": true,
                 "panel": "new"
             }
+        },
+        {
+            "label": "CMake Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["-B", "build", "-DCMAKE_BUILD_TYPE=Release", "-Wno-dev"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [
+                {
+                    "owner": "cmake",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^CMake Error at (.*):(\\d+)\\s+\\((.*)\\):$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ]
+        },
+        {
+            "label": "CMake Build (Release)",
+            "type": "shell",
+            "command": "cmake --build build --config Release --parallel",
+            "group": "build",
+            "dependsOn": "CMake Configure",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "CMake Build (Debug)",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["-B", "build", "-DCMAKE_BUILD_TYPE=Debug", "-Wno-dev"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [
+                {
+                    "owner": "cmake", 
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^CMake Error at (.*):(\\d+)\\s+\\((.*)\\):$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ]
+        },
+        {
+            "label": "CMake Build Debug Then Build",
+            "type": "shell", 
+            "command": "cmake --build build --config Debug --parallel",
+            "group": "build",
+            "dependsOn": "CMake Build (Debug)",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "CMake Clean",
+            "type": "shell",
+            "command": "test -f build/CMakeCache.txt && cmake --build build --target clean || echo 'No CMake build directory to clean'",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "CMake Clean & Rebuild",
+            "type": "shell",
+            "command": "test -f build/CMakeCache.txt && cmake --build build --target clean; cmake -B build -DCMAKE_BUILD_TYPE=Release -Wno-dev && cmake --build build --config Release --parallel",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always", 
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "CMake Rebuild",
+            "type": "shell",
+            "command": "cmake --build build --config Release --parallel",
+            "group": "build",
+            "dependsOn": "CMake Clean & Rebuild",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": ["$gcc"]
         }
     ]
 }

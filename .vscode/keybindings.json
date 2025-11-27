@@ -1,0 +1,12 @@
+[
+    {
+        "key": "cmd+shift+k",
+        "command": "cmake.cleanRebuild",
+        "when": "cmake.configurationIsReady"
+    },
+    {
+        "key": "cmd+k cmd+c", 
+        "command": "cmake.clean",
+        "when": "cmake.configurationIsReady"
+    }
+]

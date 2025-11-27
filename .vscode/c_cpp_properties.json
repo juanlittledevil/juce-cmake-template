@@ -7,8 +7,7 @@
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/lib/**",
                 "${workspaceFolder}/tests/**",
-                "${workspaceFolder}/JUCE/modules/**",
-                "${workspaceFolder}/build/_deps/juce-src/modules/**"
+                "${workspaceFolder}/JUCE/modules/**"
             ],
             "defines": [
                 "JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1",
@@ -40,10 +39,11 @@
             "macFrameworkPath": [
                 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang++",
+            "compilerPath": "",
             "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-arm64"
+            "cppStandard": "c++20",
+            "intelliSenseMode": "${default}",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

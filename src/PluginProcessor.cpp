@@ -75,7 +75,9 @@ void JuceTemplateAudioProcessor::setCurrentProgram (int index)
 
 const juce::String JuceTemplateAudioProcessor::getProgramName (int index)
 {
-    return {};
+    // Return a simple non-empty default program name so unit tests and hosts
+    // that expect at least one program can function correctly.
+    return "Default";
 }
 
 void JuceTemplateAudioProcessor::changeProgramName (int index, const juce::String& newName)
@@ -87,6 +89,8 @@ void JuceTemplateAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    // store the sample rate so tests / processing can query it
+    currentSampleRate = sampleRate;
 }
 
 void JuceTemplateAudioProcessor::releaseResources()
@@ -167,6 +171,11 @@ void JuceTemplateAudioProcessor::getStateInformation (juce::MemoryBlock& destDat
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+}
+
+double JuceTemplateAudioProcessor::getSampleRate() const
+{
+    return currentSampleRate;
 }
 
 void JuceTemplateAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
