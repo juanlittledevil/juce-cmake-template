@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# docs.sh - Launch the TurnTabby documentation in the default browser
+# docs.sh - Launch project documentation in the default browser
 # This script opens the generated Doxygen HTML documentation in your default browser.
 
 set -e  # Exit on any error
@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 DOCS_INDEX="$PROJECT_ROOT/docs/doxydocs/html/index.html"
 
-echo "Opening TurnTabby documentation..."
+echo "Opening documentation..."
 
 # Check if documentation exists
 if [ ! -f "$DOCS_INDEX" ]; then

@@ -39,13 +39,13 @@ chmod +x scripts/*.sh
 - `generate_docs.sh`
   - Generate Doxygen/Markdown developer docs. See `docs/` for details.
   - Example: `./scripts/generate_docs.sh` (writes to `docs/doxydocs`)
-- `run-tests.sh` — Unified test runner (unit, stress, perf)
-  - Powerful and flexible test runner. Supported options include `--build-first` / `-b`, `--build-if-missing` / `-m`, `--build-type` / `-t`, `--filter`, `--perf-threshold`, `--run-long-stress`, `--run-perf-regression`, `--extended-edge-cases`, `--asan` and `--env KEY=VALUE`.
-  - New `--all` flag (planned): orchestrates unit, stress and benchmark runs from a single command. Use `--build-first` with `--all` to build and run everything.
+- `run-tests.sh` — Unified test runner (unit, stress)
+  - Powerful and flexible test runner. Supported options include `--build-first` / `-b`, `--build-if-missing` / `-m`, `--build-type` / `-t`, `--filter`, `--extended-edge-cases`, `--asan` and `--env KEY=VALUE`.
+  - New `--all` flag: orchestrates unit and stress test runs from a single command. Use `--build-first` with `--all` to build and run everything.
   - NOTE: run from the repository root (or set `PROJECT_HOME`) for path correctness.
   - Example: `./scripts/run-tests.sh --build-if-missing -g --filter "Editor"`
 - `run.sh`
-  - Helper wrapper to run the Standalone app for the current build type. Supports `--build-first`, `--build-if-missing`, `--asan`, allocator guards, and log capture via `--log-run` / `--log-file` (tees stdout/stderr into `build/turntabby_run.log` by default).
+  - Helper wrapper to run the Standalone app for the current build type. Supports `--build-first`, `--build-if-missing`, `--asan`, allocator guards, and log capture via `--log-run` / `--log-file` (tees stdout/stderr into `build/run.log` by default).
   - Example: `./scripts/run.sh --build-if-missing -g --log-run`
 
 ## Common flags (supported across many scripts)
@@ -62,7 +62,7 @@ chmod +x scripts/*.sh
 - Prefer `--build-if-missing` during iterative development to avoid expensive rebuilds.
 -- Use the `--debug` flag (optionally with `--debug-visualizations`, etc.) only when you need heavy debug/visualization tooling; these options can significantly increase build times.
 - See `docs/dev/` for deeper guidance on stress/benchmark/debugging scripts:
-  - `docs/dev/PERFORMANCE_BENCHMARKING.md` (benchmarks)
+  - (performance benchmarking docs removed from template)
   - `docs/dev/THREAD_SAFETY_STRESS_TESTING.md` (stress tests)
   - (project-specific debug documents may be present under docs/dev/)
   - `docs/dev/EDGE_CASE_VALIDATION.md` (edge-case testing)
@@ -71,11 +71,11 @@ If you want to add usage examples for particular scripts (or expand `--help` out
 
 ---
 
-## Migration notes (TurnTabby → Template)
+## Migration notes (ported scripts → Template)
 
-These scripts were ported from a project named TurnTabby and have been adapted to be template-generic. Suggested next steps (handled in separate, small PRs):
+These scripts were ported from an example project and adapted to be template-generic. Suggested next steps (handled in separate, small PRs):
 
-1. Merge `run-all-tests.sh` behaviour into `run-tests.sh --all` and remove `run-all-tests.sh`.
+1. `run-all-tests.sh` behavior has been merged into `run-tests.sh --all` and the legacy script removed.
 2. Generalize `run.sh` `build-artifact` detection using project-derived names rather than fixed application names.
 3. Make `clean.sh` conservative and local-only by default while allowing opt-in for broader cleanup.
 

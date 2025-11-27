@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# generate_docs.sh - Generate HTML and Markdown documentation from TurnTabby C++ project
+# generate_docs.sh - Generate HTML and Markdown documentation from the project
 # This script uses Doxygen to parse C++ headers and generate HTML documentation
 # with diagrams and class hierarchies, then converts XML output to Markdown.
 
@@ -12,7 +12,7 @@ OUTPUT_DIR="$PROJECT_ROOT/docs/doxydocs"
 XML_DIR="$OUTPUT_DIR/xml"
 MARKDOWN_DIR="$OUTPUT_DIR/markdown"
 
-echo "Generating documentation for TurnTabby..."
+echo "Generating documentation..."
 echo "Project root: $PROJECT_ROOT"
 echo "Output directory: $OUTPUT_DIR"
 

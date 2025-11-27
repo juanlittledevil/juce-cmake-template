@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🏃 Running TurnTabby Unit Tests (assuming build is current)..."
+echo "🏃 Running unit tests (assuming build is current)..."
 echo "==========================================================="
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -21,21 +21,13 @@ if [[ -f "$ENV_FILE" ]]; then
     set +a
 fi
 
-export TURN_TABBY_RUN_LONG_STRESS="${TURN_TABBY_RUN_LONG_STRESS:-0}"
-export TURN_TABBY_RUN_PERF_REGRESSION="${TURN_TABBY_RUN_PERF_REGRESSION:-0}"
-if [[ -n "${TURN_TABBY_PERF_THRESHOLD_MS:-}" ]]; then
-    export TURN_TABBY_PERF_THRESHOLD_MS
-fi
-
 ENV_SUMMARY_PRINTED=0
 print_env_summary() {
     if [[ "$ENV_SUMMARY_PRINTED" == "1" ]]; then
         return
     fi
     echo "Exported test envs:"
-    echo "  TURN_TABBY_PERF_THRESHOLD_MS=${TURN_TABBY_PERF_THRESHOLD_MS:-<unset>}"
-    echo "  TURN_TABBY_RUN_LONG_STRESS=${TURN_TABBY_RUN_LONG_STRESS}"
-    echo "  TURN_TABBY_RUN_PERF_REGRESSION=${TURN_TABBY_RUN_PERF_REGRESSION}"
+    echo "  (no template-specific long-stress environment variables)"
     ENV_SUMMARY_PRINTED=1
 }
 
@@ -69,7 +61,7 @@ run_extended_tests() {
         exec_args+=(--filter="$RUN_FILTER")
     fi
     exec_args+=("${FORWARD_ARGS[@]}")
-    TURNTABBY_SKIP_OVERWRITE_TEST=1 "$binary" "${exec_args[@]}"
+    SKIP_OVERWRITE_TEST=1 "$binary" "${exec_args[@]}"
 }
 
 run_tests_from_binary() {
@@ -80,9 +72,9 @@ run_tests_from_binary() {
     fi
     print_env_summary
     if [ -n "$RUN_FILTER" ]; then
-        TURNTABBY_SKIP_OVERWRITE_TEST=1 "$binary" --reporter console --filter="$RUN_FILTER" "${FORWARD_ARGS[@]}"
+        SKIP_OVERWRITE_TEST=1 "$binary" --reporter console --filter="$RUN_FILTER" "${FORWARD_ARGS[@]}"
     else
-        TURNTABBY_SKIP_OVERWRITE_TEST=1 "$binary" --reporter console "${FORWARD_ARGS[@]}"
+        SKIP_OVERWRITE_TEST=1 "$binary" --reporter console "${FORWARD_ARGS[@]}"
     fi
 }
 
@@ -96,6 +88,12 @@ run_build_for_tests() {
     if [[ "$EXTENDED_EDGE_CASES" == "1" ]]; then
         extra_build_args+=(--edge-tests)
     fi
+
+    # Support additional build switches used for the consolidated --all runner
+    if [[ "${ENABLE_THREAD_STRESS:-0}" == "1" ]]; then
+        extra_build_args+=(--thread-stress-tests)
+    fi
+    # Benchmarks/perf disabled in template by default — noop here
 
     if [[ "$REQUESTED_ASAN" == "1" ]]; then
         ./scripts/build.sh --asan "${extra_build_args[@]}"
@@ -115,6 +113,11 @@ BUILD_FIRST="0"
 BUILD_IF_MISSING="0"
 EXTENDED_EDGE_CASES="0"
 REQUESTED_ASAN="0"
+ALL_MODE="0"
+ENABLE_THREAD_STRESS="1"
+RUN_UNIT="1"
+RUN_STRESS="1"
+# RUN_LONG_STRESS removed (long-stress support removed from template)
 declare -a FORWARD_ARGS=()
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -167,24 +170,29 @@ while [[ $# -gt 0 ]]; do
             BUILD_IF_MISSING="1"
             shift
             ;;
-        --perf-threshold)
-            TURN_TABBY_PERF_THRESHOLD_MS="$2"
-            export TURN_TABBY_PERF_THRESHOLD_MS
-            shift; shift
-            ;;
-        --perf-threshold=*)
-            TURN_TABBY_PERF_THRESHOLD_MS="${key#*=}"
-            export TURN_TABBY_PERF_THRESHOLD_MS
+        # --run-long-stress removed (not supported by generic template runner)
+        --all)
+            ALL_MODE="1"
             shift
             ;;
-        --run-long-stress|-s)
-            TURN_TABBY_RUN_LONG_STRESS=1
-            export TURN_TABBY_RUN_LONG_STRESS
+        --enable-stress)
+            ENABLE_THREAD_STRESS="1"
             shift
             ;;
-        --run-perf-regression)
-            TURN_TABBY_RUN_PERF_REGRESSION=1
-            export TURN_TABBY_RUN_PERF_REGRESSION
+        --enable-stress=0|--enable-stress=1)
+            ENABLE_THREAD_STRESS="${key#*=}"
+            shift
+            ;;
+        --run-unit=0|--run-unit=1)
+            RUN_UNIT="${key#*=}"
+            shift
+            ;;
+        --run-stress=0|--run-stress=1)
+            RUN_STRESS="${key#*=}"
+            shift
+            ;;
+        --run-bench=0|--run-bench=1)
+            # --run-bench ignored (benchmarks removed)
             shift
             ;;
         --env)
@@ -224,9 +232,8 @@ Options:
     --build-first|-b            Always rebuild before running tests.
   --build-if-missing|-m       Build only when UnitTests binary is absent.
     --extended-edge-cases       Build (if needed) with --edge-tests and run only the extended category.
-  --perf-threshold=<ms>       Export TURN_TABBY_PERF_THRESHOLD_MS for perf asserts.
-  --run-long-stress|-s        Export TURN_TABBY_RUN_LONG_STRESS=1.
-  --run-perf-regression       Export TURN_TABBY_RUN_PERF_REGRESSION=1.
+    --run-long-stress|-s        (not supported in template)
+    (benchmarks/perf are disabled in the template)
   --env KEY=VALUE             Export arbitrary env vars before running tests.
   --help                      Show this message and exit.
   --                          Forward remaining args directly to UnitTests binary.
@@ -276,6 +283,50 @@ if [ -n "$BUILD_TYPE" ]; then
             BUILD_TYPE=""
         fi
     fi
+fi
+
+run_all_tests() {
+    # Build once with the requested features and run multiple test categories
+    if [[ -z "$BUILD_TYPE" ]]; then
+        BUILD_TYPE="Release"
+    fi
+
+    echo "🔨 Building ${BUILD_TYPE} (single-build, testing features)..."
+    run_build_for_tests "$BUILD_TYPE"
+
+    path="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+    if [ ! -f "$path" ]; then
+        echo "❌ UnitTests binary not found at: $path" >&2
+        exit 1
+    fi
+
+    # long-stress support intentionally omitted in template
+
+    # Unit tests (exclude stress category)
+    if [[ "${RUN_UNIT}" == "1" ]]; then
+        echo "🏃 Running unit tests (excluding stress)..."
+        "$path" --exclude-category="ThreadSafetyStressTests"
+    fi
+
+    # Stress tests
+    if [[ "${RUN_STRESS}" == "1" ]]; then
+        if [[ "${ENABLE_STRESS}" == "1" ]]; then
+            echo "🧵 Running thread-safety stress tests..."
+            # long-stress is intentionally ignored by template runner
+            "$path" --category="ThreadSafetyStressTests"
+        else
+            echo "⚠️  Skipping stress tests: not enabled in build"
+        fi
+    fi
+
+    echo "🎉 All requested tests completed"
+}
+
+# If --all requested, run the consolidated pipeline
+if [[ "${ALL_MODE}" == "1" ]]; then
+    run_all_tests
+    cd "$ORIG_PWD"
+    exit 0
 fi
 
 if [ -z "$BUILD_TYPE" ]; then

@@ -128,7 +128,7 @@ cmake .. -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -Wno-dev \
     -DENABLE_PERFORMANCE_BENCHMARKING="$ENABLE_PERFORMANCE_BENCHMARKING" \
     -DENABLE_THREAD_SAFETY_STRESS_TESTS="$ENABLE_THREAD_SAFETY_STRESS_TESTS" \
     -DENABLE_EXTENDED_EDGE_CASE_TESTS="$ENABLE_EXTENDED_EDGE_CASE_TESTS" \
-    # Note: removed TurnTabby-specific PRECALC and buffer-instruction flags to keep template generic
+    # Note: removed project-specific PRECALC and buffer-instruction flags to keep template generic
 
 # Build the project
 echo "🔨 Building project..."

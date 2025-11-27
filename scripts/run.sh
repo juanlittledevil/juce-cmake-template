@@ -21,6 +21,12 @@ else
   ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fi
 
+# Try to detect the project name from CMakeLists.txt (fallback to directory name)
+PROJECT_NAME="$(grep "^project(" "$ROOT_DIR/CMakeLists.txt" 2>/dev/null | sed 's/project(\([^ ]*\).*/\1/' | head -1)"
+if [[ -z "$PROJECT_NAME" ]]; then
+  PROJECT_NAME="$(basename "$ROOT_DIR")"
+fi
+
 BUILD_DIR="build"
 BUILD_TYPE="Release"
 ALLOC_GUARDS="OFF"
@@ -94,7 +100,7 @@ Options:
   --alloc-guards    Enable malloc diagnostics (MallocScribble, MallocGuardEdges, MallocStackLogging).
   --build-first|-b  Attempt to build requested build-type before launching.
   --build-if-missing|-m  Build only if the requested build artifact is missing.
-  --log-run         Tee stdout/stderr to build/turntabby_run.log while running the app.
+  --log-run         Tee stdout/stderr to build/run.log while running the app.
   --log-file PATH   Shortcut for --log-run with a custom log file (relative paths resolve within repo root).
   --help            Show this message and exit.
 EOF
@@ -110,24 +116,24 @@ done
 
 if [[ "$LOGGING_ENABLED" == "1" ]]; then
   if [[ -z "$LOG_FILE" ]]; then
-    LOG_FILE="${BUILD_DIR}/turntabby_run.log"
+    LOG_FILE="${BUILD_DIR}/run.log"
   fi
   if [[ "$LOG_FILE" != /* ]]; then
     LOG_FILE="$ROOT_DIR/${LOG_FILE}"
   fi
 fi
 
-APP_PATH="$ROOT_DIR/${BUILD_DIR}/src/TurnTabby_artefacts/${BUILD_TYPE}/Standalone/TurnTabby.app"
+APP_PATH="$ROOT_DIR/${BUILD_DIR}/src/${PROJECT_NAME}_artefacts/${BUILD_TYPE}/Standalone/${PROJECT_NAME}.app"
 
 if [[ ! -d "$APP_PATH" ]]; then
-  echo "Error: TurnTabby app not found at: $APP_PATH" >&2
+  echo "Error: app not found at: $APP_PATH" >&2
   if [[ "${BUILD_FIRST}" == "1" ]] || [[ "${BUILD_IF_MISSING}" == "1" ]]; then
     echo "🔧 Requested build before launching; attempting to build ${BUILD_TYPE}..."
     ./scripts/build.sh --build-type ${BUILD_TYPE}
   fi
 
   if [[ ! -d "$APP_PATH" ]]; then
-    echo "Error: TurnTabby app not found at: $APP_PATH" >&2
+    echo "Error: app not found at: $APP_PATH" >&2
     if [[ "$BUILD_DIR" == "build-asan" ]]; then
       echo "Make sure you've built the project with: ./scripts/build.sh --asan" >&2
     else
@@ -146,7 +152,7 @@ if [[ ! -x "$APP_EXECUTABLE" ]]; then
 fi
 
 cd "$ROOT_DIR"
-echo "Launching TurnTabby from: $ROOT_DIR (${BUILD_TYPE}, dir: ${BUILD_DIR})"
+echo "Launching ${PROJECT_NAME} from: $ROOT_DIR (${BUILD_TYPE}, dir: ${BUILD_DIR})"
 echo "Using artifact path: $APP_PATH"
 
 declare -a LAUNCH_ENV=()

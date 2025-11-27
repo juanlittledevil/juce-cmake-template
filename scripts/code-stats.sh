@@ -4,7 +4,13 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-printf "=== TurnTabby Codebase Stats ===\n"
+printf "=== Project codebase stats ===\n"
+
+# Detect PROJECT_NAME from CMakeLists.txt or fall back to root folder name
+PROJECT_NAME=$(grep "^project(" CMakeLists.txt 2>/dev/null | sed 's/project(\([^ ]*\).*/\1/' | head -1)
+if [[ -z "$PROJECT_NAME" ]]; then
+  PROJECT_NAME=$(basename "$ROOT_DIR")
+fi
 
 CODE_DIRS=(src include tests)
 EXTS=("cpp" "c" "mm" "h" "hpp" "m")
@@ -38,7 +44,7 @@ fi
 
 printf "\n-- Key built artifacts (Release/Debug) --\n"
 for cfg in Debug Release; do
-  ARTDIR="build/src/TurnTabby_artefacts/${cfg}"
+  ARTDIR="build/src/${PROJECT_NAME}_artefacts/${cfg}"
   if [[ -d "$ARTDIR" ]]; then
     printf "Artifacts for %s:\n" "$cfg"
     find "$ARTDIR" -maxdepth 2 -type f -exec du -h {} + 2>/dev/null | sort -hr | head -n 20
@@ -58,7 +64,7 @@ if [[ -n "$SIZE_CMD" ]]; then
     BIN_PATHS+=("build/tests/UnitTests_artefacts/Release/UnitTests")
   fi
   for cfg in Debug Release; do
-    APP="$ROOT_DIR/build/src/TurnTabby_artefacts/${cfg}/Standalone/TurnTabby.app/Contents/MacOS/TurnTabby"
+    APP="$ROOT_DIR/build/src/${PROJECT_NAME}_artefacts/${cfg}/Standalone/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
     if [[ -x "$APP" ]]; then
       BIN_PATHS+=("$APP")
     fi
