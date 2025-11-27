@@ -70,13 +70,15 @@ This project is designed to be a reusable template for new JUCE projects. Here's
    ./setup-new-project.sh
    ```
 
-   The script will prompt you for:
+  The script will prompt you for:
    - Project name (e.g., "MyReverb")
    - Product name (e.g., "My Reverb Plugin")
    - Company name (e.g., "MyCompany")
    - Company domain (e.g., "mycompany.com")
    - Plugin type (synth or effect)
    - MIDI input requirement
+
+  Additionally, the setup script now includes an option to enable project-wide "warnings-as-errors" enforcement. This is OFF by default (recommended) to avoid third-party or template warnings breaking a first-time build; during setup you'll be asked whether you want to enable it for the new project. You can always change this later in the new project's `CMakeLists.txt` by setting `ENFORCE_OUR_WARNINGS` ON or OFF.
 
 3. **Build your new project**:
 
