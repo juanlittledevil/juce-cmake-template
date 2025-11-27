@@ -260,7 +260,16 @@ if [ -n "$BUILD_TYPE" ]; then
         echo "🔧 --build-first specified; building ${BUILD_TYPE} build before running tests..."
         run_build_for_tests "$BUILD_TYPE"
     fi
-    path="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+    # Try the canonical CMake test executable locations (modern template uses tests/UnitTests)
+    candidate1="${BUILD_DIR}/tests/UnitTests"
+    candidate2="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+    if [ -f "$candidate2" ]; then
+        path="$candidate2"
+    elif [ -f "$candidate1" ]; then
+        path="$candidate1"
+    else
+        path="$candidate2"  # keep existing behavior; we'll error if not found
+    fi
     if [ -f "$path" ]; then
         echo "Using $BUILD_TYPE build..."
         run_tests_from_binary "$path"
@@ -351,25 +360,35 @@ if [ -z "$BUILD_TYPE" ]; then
         fi
     fi
 
-    debug_path="${BUILD_DIR}/tests/UnitTests_artefacts/Debug/UnitTests"
-    release_path="${BUILD_DIR}/tests/UnitTests_artefacts/Release/UnitTests"
+    # Try both the newer build/tests/UnitTests binary and the older UnitTests_artefacts layout
+    debug_path1="${BUILD_DIR}/tests/UnitTests"
+    debug_path2="${BUILD_DIR}/tests/UnitTests_artefacts/Debug/UnitTests"
+    release_path1="${BUILD_DIR}/tests/UnitTests"
+    release_path2="${BUILD_DIR}/tests/UnitTests_artefacts/Release/UnitTests"
 
-    if [ -f "$debug_path" ] && [ -f "$release_path" ]; then
+    if ([ -f "$debug_path1" ] || [ -f "$debug_path2" ]) && ([ -f "$release_path1" ] || [ -f "$release_path2" ]); then
         if [[ "${DEBUG_BUILD:-0}" == "1" ]]; then
             BUILD_TYPE="Debug"
         else
             BUILD_TYPE="Release"
         fi
-    elif [ -f "$release_path" ]; then
+    elif [ -f "$release_path1" ] || [ -f "$release_path2" ]; then
         BUILD_TYPE="Release"
-    elif [ -f "$debug_path" ]; then
+    elif [ -f "$debug_path1" ] || [ -f "$debug_path2" ]; then
         BUILD_TYPE="Debug"
     else
         BUILD_TYPE=""
     fi
 
     if [ -n "$BUILD_TYPE" ]; then
-        path="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+        # Prefer the artefacts path but accept the top-level tests/UnitTests binary if present
+        if [ -f "${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests" ]; then
+            path="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+        elif [ -f "${BUILD_DIR}/tests/UnitTests" ]; then
+            path="${BUILD_DIR}/tests/UnitTests"
+        else
+            path="${BUILD_DIR}/tests/UnitTests_artefacts/${BUILD_TYPE}/UnitTests"
+        fi
         echo "Using $BUILD_TYPE build..."
         run_tests_from_binary "$path"
     else
