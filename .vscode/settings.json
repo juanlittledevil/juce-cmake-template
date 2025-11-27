@@ -13,19 +13,24 @@
     "cmake.parallelJobs": 0,
     
     // CMake Tools UI - Cross-platform
-    "cmake.options.statusBarVisibility": "visible",
+    // "cmake.options.statusBarVisibility": "visible",
+    "cmake.options.statusBarVisibility": "hidden",
     "cmake.options.advanced": {
         "build": {
             "statusBarVisibility": "visible"
+            // "statusBarVisibility": "hidden"
         },
         "launch": {
             "statusBarVisibility": "visible"
+            // "statusBarVisibility": "hidden"
         },
         "debug": {
             "statusBarVisibility": "visible"
+            // "statusBarVisibility": "hidden"
         },
         "clean": {
             "statusBarVisibility": "visible"
+            // "statusBarVisibility": "hidden"
         }
     },
     
@@ -38,5 +43,11 @@
     // C++ Configuration - Let CMake Tools auto-detect
     "C_Cpp.default.cppStandard": "c++20",
     "C_Cpp.default.cStandard": "c17",
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
-}
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "vector": "cpp",
+        "*.mm": "cpp",
+        "sstream": "cpp",
+        "locale": "cpp"
+    }
+}%                                                                                                                                                          
